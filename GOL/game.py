@@ -13,15 +13,16 @@ class GameOfLife(object):
             raise AttributeError('This is a 3D GOL. Give a list with 3 or just 1 value!')
         # Generate a 3 dimensional list of False-Values
 
-        self.playing_space = [[[(k,j,i) in beings for k in xrange(n[0])] for j in xrange(n[1])] for i in xrange(n[2])]
-
+        # get True if alive and False if dead
+        self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
 
     def tick(self):
         """ Next step
         :return:
         """
         # @TODO Make me a iterator object
-        pass
+
+        self.g = self.__game(self.g)
 
     def neighbor_count(self):
         """
@@ -30,13 +31,13 @@ class GameOfLife(object):
         """
         pass
 
-    def __game(self, space):
+    def __game(self, g):
         """
         applied regulations
-        :return: A new Game
+        :return: None
         """
 
-        # Using the following ruleset (2555)
+        # Using the ruleset (2555)
         # http://www.complex-systems.com/pdf/05-1-2.pdf
         # http://www.complex-systems.com/pdf/08-1-4.pdf
 
@@ -46,6 +47,13 @@ class GameOfLife(object):
         # fertility
         # Wit 5 neighbors a dead cell gets alive
         # 5 5
+
+        # 1. count neighbors
+        # 2. is alive & not neighbors in range(2,5)  -> die!
+        # 3. is dead & neighbors == 5 -> life!
+
+        return g
+
 
 
 
