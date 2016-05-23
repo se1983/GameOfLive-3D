@@ -10,3 +10,4 @@
 
 * OpenGL-Contex : NEHE Tutorials 
 * Camera with Pygame
+* http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/

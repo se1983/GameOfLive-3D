@@ -16,6 +16,7 @@ class GameOfLife(object):
         # get True if alive and False if dead
         self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
 
+
     def tick(self):
         """ Next step
         :return:
@@ -29,7 +30,7 @@ class GameOfLife(object):
 
         :return: Matrix of the neighbors
         """
-        pass
+        n = 0
 
     def __game(self, g):
         """
