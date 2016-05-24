@@ -12,7 +12,7 @@ class GameMain():
     # handles intialization of game and graphics, as well as game loop
     done = False
 
-    def __init__(self, width=800, height=800, board_size=5):
+    def __init__(self, gol, width=800, height=800, board_size=5):
         """Initialize PyGame window.
 
         variables:
@@ -26,6 +26,8 @@ class GameMain():
         self.demo_mode = True
         self.light_on = False
         self.board_size = board_size
+
+        self.gol = gol
 
         pygame.init()
 
@@ -45,7 +47,7 @@ class GameMain():
 
         # Z-Filter
         glEnable( GL_DEPTH_TEST )
-        glEnable(GL_STENCIL_TEST)
+        #glEnable(GL_STENCIL_TEST)
 
         # Transparent objects
         # Untested
@@ -70,11 +72,11 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
 
         if self.demo_mode:
-            glRotatef(1, 3, 1, 1)
+            glRotatef(0.03, 3, 1, 1)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        draw_cube_cube(cube(), self.board_size)
+        draw_cube_cube(cube(), self.board_size, g=self.gol.g)
 
         # Lightning
         if self.light_on:
