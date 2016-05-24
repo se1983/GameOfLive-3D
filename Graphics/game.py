@@ -12,7 +12,7 @@ class GameMain():
     # handles intialization of game and graphics, as well as game loop
     done = False
 
-    def __init__(self, width=800, height=800):
+    def __init__(self, width=800, height=800, board_size=5):
         """Initialize PyGame window.
 
         variables:
@@ -25,7 +25,7 @@ class GameMain():
         """
         self.demo_mode = True
         self.light_on = False
-        self.board_size = 10
+        self.board_size = board_size
 
         pygame.init()
 
@@ -36,7 +36,7 @@ class GameMain():
 
         gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
 
-        glTranslatef(-5.0,-5.0, -8.0 * self.board_size, 1 )
+        glTranslatef(-2.5,-2.5, -8.0 * self.board_size, 1 )
         glRotatef(45, 1,0,1)
 
         glEnable( GL_LIGHTING )
@@ -45,12 +45,13 @@ class GameMain():
 
         # Z-Filter
         glEnable( GL_DEPTH_TEST )
+        glEnable(GL_STENCIL_TEST)
 
         # Transparent objects
         # Untested
         # http://stackoverflow.com/questions/23613715/drawing-transparent-subsurfaces-windows-in-pyopengl
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glEnable(GL_BLEND)
+        #glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        #glEnable(GL_BLEND)
         glPolygonOffset(1.0, 1.0)
         glEnable(GL_POLYGON_OFFSET_FILL)
 
@@ -62,6 +63,7 @@ class GameMain():
             self.update()
             self.draw()
 
+
     def draw(self):
         """draw screen"""
 
@@ -70,16 +72,9 @@ class GameMain():
         if self.demo_mode:
             glRotatef(1, 3, 1, 1)
 
-
-
-
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         draw_cube_cube(cube(), self.board_size)
-        #draw_cube(cube())
-
-
-
 
         # Lightning
         if self.light_on:
@@ -95,7 +90,6 @@ class GameMain():
 
     def update(self):
         """physics/move guys."""
-        '''Here we are setting the lighting parameters'''
 
 
     def handle_events(self):
