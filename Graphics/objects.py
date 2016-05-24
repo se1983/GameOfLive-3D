@@ -19,4 +19,27 @@ def draw_triangled_cube(cube):
     glEnd()
 
 def draw_cube(cube):
-    draw_wired_cube(cube)
+    draw_triangled_cube(cube['triangles'])
+    draw_wired_cube(cube['wires'])
+
+def draw_cube_series(cube, amount = 2):
+    for i in range(amount):
+        draw_cube(cube)
+        glTranslatef(2.1, 0.0, 0.0)
+    glTranslatef(-amount*2.1, 0.0, 0.0)
+
+def draw_cube_area(cube, amount=2):
+    for i in range(amount):
+        draw_cube_series(cube, amount)
+        glTranslatef(0.0, 2.1, 0.0)
+    glTranslatef(0.0, -amount * 2.1, 0.0)
+
+def draw_cube_cube(cube, amount=2):
+    for i in range(amount):
+        draw_cube_area(cube, amount)
+        glTranslatef(0.0,0.0,2.1)
+    glTranslatef(0.0,0.0,-amount * 2.1)
+
+
+
+

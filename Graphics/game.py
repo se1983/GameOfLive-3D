@@ -3,14 +3,14 @@ from pygame.locals import *
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from Graphics.geometrics import wired_cube, triangled_cube
-from Graphics.objects import draw_wired_cube, draw_triangled_cube
+from Graphics.geometrics import cube
+from Graphics.objects import draw_cube_cube, draw_cube
 
 class GameMain():
     # handles intialization of game and graphics, as well as game loop
     done = False
 
-    def __init__(self, width=800, height=600):
+    def __init__(self, width=800, height=800):
         """Initialize PyGame window.
 
         variables:
@@ -29,13 +29,16 @@ class GameMain():
         pygame.display.set_caption( "GOL 3D" )
 
         gluPerspective(45, (self.width/self.height), 0.1, 50.0)
-        glTranslatef(0.0,0.0, -5)
-
+        glTranslatef(-10.0,-10.0, -10.0, -40)
 
         self.light_on = False
         glEnable( GL_LIGHTING )
         glEnable(GL_LIGHT1)
         glDisable(GL_LIGHT0)
+
+
+        # Transparent objects
+
 
 
     def main_loop(self):
@@ -47,21 +50,27 @@ class GameMain():
 
     def draw(self):
         """draw screen"""
-        #self.screen.fill(Color('darkgrey'))
 
         # draw your stuff here. sprites, gui, etc....
-        #self.screen.blit(self.sprite_bg, (0,0))
-        #self.screen.blit(self.sprite_ball, (100,100))
+
         glRotatef(1, 3, 1, 1)
+
+        # Transparent objects
+        # Untested
+        # http://stackoverflow.com/questions/23613715/drawing-transparent-subsurfaces-windows-in-pyopengl
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_BLEND)
+        glPolygonOffset(1.0, 1.0)
+        glEnable(GL_POLYGON_OFFSET_FILL)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        draw_triangled_cube(triangled_cube())
-        draw_wired_cube(wired_cube())
 
-        pygame.display.flip()
+        draw_cube_cube(cube(), 5)
+        #draw_cube(cube())
 
-    def update(self):
-        """physics/move guys."""
-        '''Here we are setting the lighting parameters'''
+
+
+
+        # Lightning
         if self.light_on:
             glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.2, .2, .2, 1.0) )
             glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_3(.8,.8,.8))
@@ -70,6 +79,13 @@ class GameMain():
             glDisable( GL_LIGHTING )
             glDisable(GL_LIGHT1)
             glDisable(GL_LIGHT0)
+
+        pygame.display.flip()
+
+    def update(self):
+        """physics/move guys."""
+        '''Here we are setting the lighting parameters'''
+
 
     def handle_events(self):
         """handle events: keyboard, mouse, etc."""
