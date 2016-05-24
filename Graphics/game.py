@@ -3,8 +3,8 @@ from pygame.locals import *
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from Graphics.geometrics import cube
-from Graphics.objects import draw_cube
+from Graphics.geometrics import wired_cube, triangled_cube
+from Graphics.objects import draw_wired_cube, draw_triangled_cube
 
 class GameMain():
     # handles intialization of game and graphics, as well as game loop
@@ -46,9 +46,11 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
         #self.screen.blit(self.sprite_bg, (0,0))
         #self.screen.blit(self.sprite_ball, (100,100))
-        #glRotatef(1, 3, 1, 1)
+        glRotatef(1, 3, 1, 1)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        draw_cube(cube())
+        #draw_wired_cube(wired_cube())
+
+        draw_triangled_cube(triangled_cube())
         pygame.display.flip()
 
     def update(self):
