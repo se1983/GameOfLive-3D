@@ -3,6 +3,8 @@ from pygame.locals import *
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
+from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable
+
 from Graphics.geometrics import cube
 from Graphics.objects import draw_cube_cube, draw_cube
 
@@ -21,21 +23,26 @@ class GameMain():
             limit_fps = boolean toggles capping FPS, to share cpu, or let it run free.
             now = current time in Milliseconds. ( 1000ms = 1second)
         """
+        self.demo_mode = False
+        self.light_on = False
+
         pygame.init()
 
         # save w, h, and screen
         self.width, self.height = width, height
-        self.screen = pygame.display.set_mode((self.width, self.height), DOUBLEBUF|OPENGL)
+        self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
         pygame.display.set_caption( "GOL 3D" )
 
         gluPerspective(45, (self.width/self.height), 0.1, 50.0)
-        glTranslatef(-10.0,-10.0, -10.0, -40)
 
-        self.light_on = False
+        glTranslatef(-5.0,-5.0, -40.0, 1 )
+        glRotatef(45, 1,0,1)
+
         glEnable( GL_LIGHTING )
         glEnable(GL_LIGHT1)
         glDisable(GL_LIGHT0)
 
+        glEnable( GL_DEPTH_TEST )
 
         # Transparent objects
 
@@ -53,7 +60,8 @@ class GameMain():
 
         # draw your stuff here. sprites, gui, etc....
 
-        glRotatef(1, 3, 1, 1)
+        if self.demo_mode:
+            glRotatef(1, 3, 1, 1)
 
         # Transparent objects
         # Untested
