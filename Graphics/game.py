@@ -108,4 +108,7 @@ class GameMain():
                 self.done = True
             # event: keydown
             elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE: self.done = True
+                if event.key == K_ESCAPE:
+                    self.done = True
+                if event.key == K_SPACE:
+                    self.gol.tick()
