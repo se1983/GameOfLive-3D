@@ -26,6 +26,7 @@ class GameMain():
             now = current time in Milliseconds. ( 1000ms = 1second)
         """
         self.demo_mode = True
+        self.demo_speed = 1
         self.light_on = False
         self.board_size = board_size
 
@@ -74,7 +75,7 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
 
         if self.demo_mode:
-            glRotatef(0.03, 3, 1, 1)
+            glRotatef(self.demo_speed, 3, 1, 1)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 

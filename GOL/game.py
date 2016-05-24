@@ -14,6 +14,8 @@ class GameOfLife(Thread):
         # As standard n should be a 3d-list but if it's just integer we make one.
         if type(n) == int:
             n = [n,n,n]
+        self.n = n
+
         # Check the dimensions
         if not len(n) == 3:
             raise AttributeError('This is a 3D GOL. Give a list with 3 or just 1 value!')
@@ -40,6 +42,8 @@ class GameOfLife(Thread):
 
         :return: Matrix of the neighbors
         """
+
+
         n = 0
 
     def __game(self, g):

@@ -1,10 +1,12 @@
 from Graphics.game import GameMain
 from GOL.game import GameOfLife
 
+from random import randint
+
 if __name__ == "__main__":
 
-    size = 5
-    livings = [(0,0,0), (0,0,1), (0,1,1), (3,4,2), (2,4,1)]
+    size = 20
+    livings = [(randint(0, size-1), randint(0, size-1), randint(0, size-1)) for x in range(200)]
 
     gol = GameOfLife(size, livings)
 
