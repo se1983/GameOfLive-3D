@@ -48,9 +48,9 @@ class GameMain():
         #self.screen.blit(self.sprite_ball, (100,100))
         glRotatef(1, 3, 1, 1)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        #draw_wired_cube(wired_cube())
-
         draw_triangled_cube(triangled_cube())
+        draw_wired_cube(wired_cube())
+
         pygame.display.flip()
 
     def update(self):
