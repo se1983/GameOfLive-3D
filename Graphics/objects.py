@@ -12,8 +12,9 @@ def draw_wired_cube(cube):
 def draw_triangled_cube(cube):
     glBegin(GL_TRIANGLES)
     glColor3f(0.3, 0.3, 0.3)
-    for triangle in cube['triangles']:
+    for i, triangle in enumerate(cube['triangles']):
         for vertex in triangle:
+            glNormal3f(*cube['normals'][i])
             glVertex3f(*cube['vertices'][vertex])
     glEnd()
 

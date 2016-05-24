@@ -37,4 +37,19 @@ def triangled_cube():
         (7,2,6)
     )
 
-    return dict(triangles = triangles, vertices = cube_vertices)
+    normals =(
+        (1.0,0.0,0.0),
+        (0.0,1.0,1.0),
+        (1.0,0.0,0.0),
+        (0.0,0.0,1.0),
+        (0.0,1.0,0.0),
+        (0.0,0.0,1.0),
+        (-1.0,0.0,0.0),
+        (-1.0,0.0,0.0),
+        (0.0,0.0,-1.0),
+        (0.0,0.0,-1.0),
+        (0.0,-1.0,0.0),
+        (0.0,-1.0,0.0)
+    )
+
+    return dict(triangles = triangles, vertices = cube_vertices, normals=normals)

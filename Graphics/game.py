@@ -32,6 +32,12 @@ class GameMain():
         glTranslatef(0.0,0.0, -5)
 
 
+        self.light_on = False
+        glEnable( GL_LIGHTING )
+        glEnable(GL_LIGHT1)
+        glDisable(GL_LIGHT0)
+
+
     def main_loop(self):
         """Game() main loop."""
         while not self.done:
@@ -55,7 +61,15 @@ class GameMain():
 
     def update(self):
         """physics/move guys."""
-        pass
+        '''Here we are setting the lighting parameters'''
+        if self.light_on:
+            glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.2, .2, .2, 1.0) )
+            glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_3(.8,.8,.8))
+            glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(-2,0,3,1) )
+        else:
+            glDisable( GL_LIGHTING )
+            glDisable(GL_LIGHT1)
+            glDisable(GL_LIGHT0)
 
     def handle_events(self):
         """handle events: keyboard, mouse, etc."""
