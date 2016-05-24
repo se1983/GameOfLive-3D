@@ -1,8 +1,14 @@
+from threading import Thread
+
+from time import sleep
 
 
-class GameOfLife(object):
+class GameOfLife(Thread):
 
-    def __init__(self, n, beings):
+    def __init__(self, n, beings, run=False):
+
+        Thread.__init__(self)
+        self.run = run
 
         # This helps to generalise.
         # As standard n should be a 3d-list but if it's just integer we make one.
@@ -15,6 +21,10 @@ class GameOfLife(object):
 
         # get True if alive and False if dead
         self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
+
+    def run(self):
+        self.__main_loop()
+
 
 
     def tick(self):
@@ -54,6 +64,11 @@ class GameOfLife(object):
         # 3. is dead & neighbors == 5 -> life!
 
         return g
+
+    def __main_loop(self):
+        while self.run:
+            sleep(3)
+            self.tick()
 
 
 

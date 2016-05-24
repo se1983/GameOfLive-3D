@@ -6,7 +6,9 @@ from OpenGL.GLU import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable
 
 from Graphics.geometrics import cube
-from Graphics.objects import draw_cube_cube
+from Graphics.objects import draw_cube_Matrix
+
+from time import sleep
 
 class GameMain():
     # handles intialization of game and graphics, as well as game loop
@@ -52,8 +54,8 @@ class GameMain():
         # Transparent objects
         # Untested
         # http://stackoverflow.com/questions/23613715/drawing-transparent-subsurfaces-windows-in-pyopengl
-        #glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        #glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_BLEND)
         glPolygonOffset(1.0, 1.0)
         glEnable(GL_POLYGON_OFFSET_FILL)
 
@@ -64,7 +66,7 @@ class GameMain():
             self.handle_events()
             self.update()
             self.draw()
-
+            sleep(0.01)
 
     def draw(self):
         """draw screen"""
@@ -76,7 +78,7 @@ class GameMain():
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        draw_cube_cube(cube(), self.board_size, g=self.gol.g)
+        draw_cube_Matrix(cube(), self.board_size, g=self.gol.g)
 
         # Lightning
         if self.light_on:
@@ -92,6 +94,7 @@ class GameMain():
 
     def update(self):
         """physics/move guys."""
+
 
 
     def handle_events(self):
