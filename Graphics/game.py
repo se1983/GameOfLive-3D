@@ -84,8 +84,8 @@ class GameMain():
         # Lightning
         if self.light_on:
             glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.2, .2, .2, 1.0) )
-            glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_3(.8,.8,.8))
-            glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(-2,0,3,1) )
+            glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_3(0.8, 0.8, 0.8))
+            glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(-20,0,30,1))
         else:
             glDisable( GL_LIGHTING )
             glDisable(GL_LIGHT1)

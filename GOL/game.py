@@ -5,21 +5,17 @@ from time import sleep
 
 class GameOfLife(Thread):
 
-    def __init__(self, n, beings, run=False):
+    def __init__(self, n, beings, run=False, ruleset='2555'):
 
         Thread.__init__(self)
         self.run = run
+        self.ruleset = [int(s) for s in ruleset]
 
         # This helps to generalise.
         # As standard n should be a 3d-list but if it's just integer we make one.
         if type(n) == int:
             n = [n,n,n]
         self.n = n
-
-        # Check the dimensions
-        if not len(n) == 3:
-            raise AttributeError('This is a 3D GOL. Give a list with 3 or just 1 value!')
-        # Generate a 3 dimensional list of False-Values
 
         # get True if alive and False if dead
         self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
@@ -62,6 +58,31 @@ class GameOfLife(Thread):
                             n[i][j][k] += 1
                         if self.g[i-1][j][k]:
                             n[i][j][k] += 1
+                        # counting also the neighbors on the edges
+                        if self.g[i+1][j+1][k+1]:
+                            n[i][j][k] += 1
+                        if self.g[i-1][j+1][k+1]:
+                            n[i][j][k] += 1
+                        if self.g[i+1][j-1][k+1]:
+                            n[i][j][k] += 1
+                        if self.g[i-1][j-1][k+1]:
+                            n[i][j][k] += 1
+                        if self.g[i+1][j+1][k-1]:
+                            n[i][j][k] += 1
+                        if self.g[i-1][j+1][k-1]:
+                            n[i][j][k] += 1
+                        if self.g[i+1][j-1][k-1]:
+                            n[i][j][k] += 1
+                        if self.g[i-1][j-1][k-1]:
+                            n[i][j][k] += 1
+                        if self.g[i+1][j+1][k]:
+                            n[i][j][k] += 1
+                        if self.g[i-1][j+1][k]:
+                            n[i][j][k] += 1
+                        if self.g[i+1][j-1][k]:
+                            n[i][j][k] += 1
+                        if self.g[i-1][j-1][k]:
+                            n[i][j][k] += 1
                     except IndexError:
                         pass
         print(n)
@@ -96,16 +117,16 @@ class GameOfLife(Thread):
 
         # Life wxyz is the rule set in which an alive cell will
         # stay alive in the next generation if it has n live neighbors
-        # and w ≤ n ≤ x and a dead cell will become alive in the next generation if y ≤ n ≤ z.
+        # and w <= n <= x and a dead cell will become alive in the next generation if y <= n <= z.
 
         for i, a in enumerate(self.g):
             for j, r in enumerate(a):
                 for k, e in enumerate(r):
                     if self.g[i][j][k]:
-                        if  (n[i][j][k] < 4 or n[i][j][k] > 5):
+                        if  not (self.ruleset[0] <= n[i][j][k] and n[i][j][k] <= self.ruleset[1]):
                             self.g[i][j][k] = False
                     else:
-                        if n[i][j][k] == 5:
+                        if self.ruleset[2] <= n[i][j][k]  and n[i][j][k] <= self.ruleset[3] :
                             self.g[i][j][k] = True
         print(g)
         return g
