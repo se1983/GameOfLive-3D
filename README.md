@@ -12,3 +12,6 @@
 * Camera with Pygame
 * http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/
 * http://pyopengl.sourceforge.net/context/tutorials/shader_5.html
+* http://www.movesinstitute.org/~mcdowell/mv4202/notes/lect13.pdf
+* https://www.sjbaker.org/steve/omniv/opengl_lighting.html
+* https://www.cse.msu.edu/~cse872/tutorial3.html

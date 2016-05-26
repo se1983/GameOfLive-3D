@@ -37,16 +37,21 @@ class GameMain():
         # save w, h, and screen
         self.width, self.height = width, height
         self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
-        pygame.display.set_caption( "GOL 3D" )
+        pygame.display.set_caption( "sebsch's LIFE 3D" )
 
         gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
 
         glTranslatef(-2.5,-2.5, -8.0 * self.board_size, 1 )
         glRotatef(45, 1,0,1)
 
+
+        # Light
         glEnable( GL_LIGHTING )
         glEnable(GL_LIGHT1)
         glDisable(GL_LIGHT0)
+        # https://www.sjbaker.org/steve/omniv/opengl_lighting.html
+        glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION )
+        glEnable ( GL_COLOR_MATERIAL )
 
         # Z-Filter
         glEnable( GL_DEPTH_TEST )
@@ -83,7 +88,7 @@ class GameMain():
 
         # Lightning
         if self.light_on:
-            glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.2, .2, .2, 1.0) )
+            glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.2, .2, .2, 0.2) )
             glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_3(0.8, 0.8, 0.8))
             glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(-20,0,30,1))
         else:
@@ -95,8 +100,11 @@ class GameMain():
 
     def update(self):
         """physics/move guys."""
+        pass
 
 
+    def toggle_light(self):
+        self.light_on = not self.light_on
 
     def handle_events(self):
         """handle events: keyboard, mouse, etc."""
@@ -110,5 +118,8 @@ class GameMain():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self.done = True
+                    self.gol.kill()
                 if event.key == K_SPACE:
                     self.gol.tick()
+                if event.key == K_l:
+                    self.toggle_light()

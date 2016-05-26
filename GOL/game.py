@@ -8,7 +8,7 @@ class GameOfLife(Thread):
     def __init__(self, n, beings, run=False, ruleset='2555'):
 
         Thread.__init__(self)
-        self.run = run
+        self.__run = run
         self.ruleset = [int(s) for s in ruleset]
 
         # This helps to generalise.
@@ -19,12 +19,12 @@ class GameOfLife(Thread):
 
         # get True if alive and False if dead
         self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
-        print(self.g)
 
     def run(self):
         self.__main_loop()
 
-
+    def kill(self):
+        self.__run = False
 
     def tick(self):
         """ Next step
@@ -46,6 +46,7 @@ class GameOfLife(Thread):
             for j, r in enumerate(a):
                 for k, e in enumerate(r):
                     try:
+                        # check the sides
                         if self.g[i][j][k+1]:
                             n[i][j][k] += 1
                         if self.g[i][j][k-1]:
@@ -58,7 +59,8 @@ class GameOfLife(Thread):
                             n[i][j][k] += 1
                         if self.g[i-1][j][k]:
                             n[i][j][k] += 1
-                        # counting also the neighbors on the edges
+                        # counting also the neighbors
+                        # on the edges
                         if self.g[i+1][j+1][k+1]:
                             n[i][j][k] += 1
                         if self.g[i-1][j+1][k+1]:
@@ -84,56 +86,42 @@ class GameOfLife(Thread):
                         if self.g[i-1][j-1][k]:
                             n[i][j][k] += 1
                     except IndexError:
+                        # ignore the edges of the playground
                         pass
-        print(n)
         return n
-
-
-
-
 
     def __game(self, g):
         """
-        applied regulations
-        :return: None
+        Here lives the cellular automate.
+
+        Checking the ruleset by the wxyz-notation.
+
+        :return: g -- game object
         """
 
-        # Using the ruleset (2555)
-        # http://www.complex-systems.com/pdf/05-1-2.pdf
-        # http://www.complex-systems.com/pdf/08-1-4.pdf
-
-        # Safe Environment
-        # With range (2,5) neighbors a living cell keeps alive
-        # 2 5
-        # fertility
-        # Wit 5 neighbors a dead cell gets alive
-        # 5 5
-
-        # 1. count neighbors
         n = self.neighbor_count()
-        # 2. is alive & not neighbors in range(2,5)  -> die!
-
-        ## Here we use RULESET: 4555
 
         # Life wxyz is the rule set in which an alive cell will
         # stay alive in the next generation if it has n live neighbors
-        # and w <= n <= x and a dead cell will become alive in the next generation if y <= n <= z.
+        # and w <= n <= x and a dead cell will become alive in the
+        # next generation if y <= n <= z.
 
-        for i, a in enumerate(self.g):
-            for j, r in enumerate(a):
-                for k, e in enumerate(r):
-                    if self.g[i][j][k]:
-                        if  not (self.ruleset[0] <= n[i][j][k] and n[i][j][k] <= self.ruleset[1]):
+        ## @TODO automate in expression
+
+        for i, area in enumerate(self.g):
+            for j, row in enumerate(area):
+                for k, cell in enumerate(row):
+                    if cell:
+                        if not (self.ruleset[0] <= n[i][j][k] <= self.ruleset[1]):
                             self.g[i][j][k] = False
                     else:
-                        if self.ruleset[2] <= n[i][j][k]  and n[i][j][k] <= self.ruleset[3] :
+                        if self.ruleset[2] <= n[i][j][k] <= self.ruleset[3]:
                             self.g[i][j][k] = True
-        print(g)
         return g
 
     def __main_loop(self):
-        while self.run:
-            sleep(3)
+        while self.__run:
+            sleep(1)
             self.tick()
 
 

@@ -1,5 +1,6 @@
 
 cube_vertices = [(x, y, z) for x in (1, -1) for y in (1, -1) for z in (1, -1)]
+
 edges = (
     (0, 1),
     (0, 2),
@@ -14,6 +15,7 @@ edges = (
     (6, 7),
     (6, 4)
 )
+
 triangles = (
     (0,1,3),
     (0,1,5),
