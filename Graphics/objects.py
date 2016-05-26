@@ -4,7 +4,7 @@ from OpenGL.raw.GL.ARB.tessellation_shader import GL_TRIANGLES
 
 def draw_wired_cube(cube):
     glBegin(GL_LINES)
-    glColor3f(0,0.7,0)
+    glColor4f(0,0.55,0.0, 0.99)
     [glVertex3f(*cube['vertices'][vertex]) for edge in cube['edges'] for vertex in edge]
     glEnd()
 

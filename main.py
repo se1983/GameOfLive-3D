@@ -5,8 +5,8 @@ from random import randint
 
 if __name__ == "__main__":
 
-    size = 5
-    livings = [(randint(0, size-1), randint(0, size-1), randint(0, size-1)) for x in range(40)]
+    size = 7
+    livings = [(randint(0, size-1), randint(0, size-1), randint(0, size-1)) for x in range(100)]
 
     gol = GameOfLife(size, livings, run=False)
     gol.start()

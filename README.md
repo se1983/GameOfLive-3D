@@ -15,3 +15,11 @@
 * http://www.movesinstitute.org/~mcdowell/mv4202/notes/lect13.pdf
 * https://www.sjbaker.org/steve/omniv/opengl_lighting.html
 * https://www.cse.msu.edu/~cse872/tutorial3.html
+
+
+## TODO
+
+1. Light
+2. Parametric attributes realtime controllable
+3. HUD
+4. Keyboard- and Mouse-Control
