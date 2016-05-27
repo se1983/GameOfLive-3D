@@ -39,13 +39,29 @@ class GameMain():
         self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
         pygame.display.set_caption( "sebsch's LIFE 3D" )
 
-        gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
 
+        self.__init_position()
+
+        # Light
+        self.__init_light__()
+        # Z-Filter
+        self.__init_zfilter__()
+
+        # Transparent objects
+        self.__init_alpha__()
+
+        # Offset for better displaying
+        self.__init_polyoffset()
+
+
+
+    def __init_position(self):
+        gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
         glTranslatef(-2.5,-2.5, -8.0 * self.board_size, 1 )
         glRotatef(45, 1,0,1)
 
 
-        # Light
+    def __init_light__(self):
         glEnable( GL_LIGHTING )
         glEnable(GL_LIGHT1)
         glDisable(GL_LIGHT0)
@@ -53,18 +69,17 @@ class GameMain():
         glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION )
         glEnable ( GL_COLOR_MATERIAL )
 
-        # Z-Filter
+    def __init_zfilter__(self):
         glEnable( GL_DEPTH_TEST )
         #glEnable(GL_STENCIL_TEST)
 
-        # Transparent objects
-        # Untested
-        # http://stackoverflow.com/questions/23613715/drawing-transparent-subsurfaces-windows-in-pyopengl
+    def __init_alpha__(self):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
+
+    def __init_polyoffset(self):
         glPolygonOffset(1.0, 1.0)
         glEnable(GL_POLYGON_OFFSET_FILL)
-
 
     def main_loop(self):
         """Game() main loop."""
