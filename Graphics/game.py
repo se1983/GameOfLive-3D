@@ -2,11 +2,13 @@ import pygame
 from pygame.locals import *
 
 from OpenGL.GL import *
+from OpenGL.GL import shaders
 from OpenGL.GLU import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable
 
 from Graphics.geometrics import cube
 from Graphics.objects import draw_cube_Matrix
+from Graphics.shader import vertex,fragment
 
 from time import sleep
 
@@ -37,36 +39,45 @@ class GameMain():
         # save w, h, and screen
         self.width, self.height = width, height
         self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
-        pygame.display.set_caption( "sebsch's LIFE 3D" )
+        pygame.display.set_caption( "sebsch's 3D LIFE <%s>" % "".join([str(i) for i in self.gol.ruleset]))
 
-
+        gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
+        # positioning
         self.__init_position()
-
         # Light
         self.__init_light__()
         # Z-Filter
         self.__init_zfilter__()
-
         # Transparent objects
         self.__init_alpha__()
-
         # Offset for better displaying
         self.__init_polyoffset()
 
 
 
     def __init_position(self):
-        gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
         glTranslatef(-2.5,-2.5, -8.0 * self.board_size, 1 )
         glRotatef(45, 1,0,1)
 
 
     def __init_light__(self):
-        glEnable( GL_LIGHTING )
-        glEnable(GL_LIGHT1)
-        glDisable(GL_LIGHT0)
+
+        # TODO: light looks terrible! looking just for shiny reflections
+        # Even with GL_SMOOTH there are Phong-reflections
+
+        glShadeModel(GL_SMOOTH)
+        glLightfv(GL_LIGHT0, GL_POSITION, [100.5, 100.0, 100.0, 0.9])
+        glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.0, .5, 0.0, 0.1) )
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_4(0.1, 0.1, 0.1, 1.0))
+        glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(0.1,0.1,0.1))
+        glLightfv(GL_LIGHT1, GL_SPECULAR, GLfloat_4(0,0.3,0, 1))
+
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, GLfloat_4(0.0, 0.1, 0.0, 0.0))
+
+
+
+
         # https://www.sjbaker.org/steve/omniv/opengl_lighting.html
-        glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION )
         glEnable ( GL_COLOR_MATERIAL )
 
     def __init_zfilter__(self):
@@ -103,9 +114,10 @@ class GameMain():
 
         # Lightning
         if self.light_on:
-            glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.2, .2, .2, 0.2) )
-            glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_3(0.8, 0.8, 0.8))
-            glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(-20,0,30,1))
+
+            glEnable( GL_LIGHTING )
+            glEnable(GL_LIGHT1)
+            glEnable(GL_LIGHT0)
         else:
             glDisable( GL_LIGHTING )
             glDisable(GL_LIGHT1)
