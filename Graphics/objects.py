@@ -1,17 +1,19 @@
 from OpenGL.GL import *
 from OpenGL.raw.GL.ARB.tessellation_shader import GL_TRIANGLES
 
+from Graphics import colors
 
-def draw_wired_cube(cube):
+
+def draw_wired_cube(cube, color=(0.1,0.1,0.1, 0.5)):
     glBegin(GL_LINES)
-    glColor4f(0,0.55,0.0, 0.99)
-    [glVertex3f(*cube['vertices'][vertex]) for edge in cube['edges'] for vertex in edge]
+    glColor4f(*color)
+    [glVertex3f(*cube['vertices'][vertex] ) for edge in cube['edges'] for vertex in edge]
     glEnd()
 
 
 def draw_triangled_cube(cube):
     glBegin(GL_TRIANGLES)
-    glColor4f(0.3, 0.3, 0.3, 0.6)
+    glColor4f(*colors.grey)
     for i, triangle in enumerate(cube['triangles']):
         glNormal3f(*cube['normals'][i])
         for vertex in triangle:

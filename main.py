@@ -3,6 +3,21 @@ from GOL.game import GameOfLife
 
 from random import randint
 
+
+""" FRAGEN
+1. Beleuchtungsfarben und -mischverhaeltnisse
+2. zoom mit Kameraposition
+3. Elemente aus der Beleuchtung ausnehmen (HUD)
+"""
+
+# DONE Wuerfel zeichnen
+# DONE Life-Automat
+# Done Zell-Matrix zeichnen
+# TODO Zoom und drehen durch Maus
+# TODO HUD
+# TODO Steuerung durch config-files
+# TODO autorun
+
 if __name__ == "__main__":
 
     size = 7

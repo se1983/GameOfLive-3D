@@ -4,11 +4,12 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GL import shaders
 from OpenGL.GLU import *
-from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable
+from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, glFrustum
 
 from Graphics.geometrics import cube
 from Graphics.objects import draw_cube_Matrix
 from Graphics.shader import vertex,fragment
+from Graphics import colors, light
 
 from time import sleep
 
@@ -28,6 +29,7 @@ class GameMain():
             now = current time in Milliseconds. ( 1000ms = 1second)
         """
         self.demo_mode = True
+        self.interact_mode = False
         self.demo_speed = 1
         self.light_on = False
         self.board_size = board_size
@@ -64,25 +66,11 @@ class GameMain():
 
         # TODO: light looks terrible! looking just for shiny reflections
         # Even with GL_SMOOTH there are Phong-reflections
-
-        glShadeModel(GL_SMOOTH)
-        glLightfv(GL_LIGHT0, GL_POSITION, [100.5, 100.0, 100.0, 0.9])
-        glLightfv( GL_LIGHT1, GL_AMBIENT, GLfloat_4(0.0, .5, 0.0, 0.1) )
-        glLightfv(GL_LIGHT1, GL_DIFFUSE, GLfloat_4(0.1, 0.1, 0.1, 1.0))
-        glLightfv(GL_LIGHT1, GL_POSITION, GLfloat_4(0.1,0.1,0.1))
-        glLightfv(GL_LIGHT1, GL_SPECULAR, GLfloat_4(0,0.3,0, 1))
-
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, GLfloat_4(0.0, 0.1, 0.0, 0.0))
-
-
-
-
-        # https://www.sjbaker.org/steve/omniv/opengl_lighting.html
-        glEnable ( GL_COLOR_MATERIAL )
+        light.init()
 
     def __init_zfilter__(self):
         glEnable( GL_DEPTH_TEST )
-        #glEnable(GL_STENCIL_TEST)
+        glEnable(GL_STENCIL_TEST)
 
     def __init_alpha__(self):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -108,13 +96,12 @@ class GameMain():
         if self.demo_mode:
             glRotatef(self.demo_speed, 3, 1, 1)
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)
+        glClearColor(0.1,0.2,0.1,1)
         draw_cube_Matrix(cube(), self.board_size, g=self.gol.g)
 
         # Lightning
         if self.light_on:
-
             glEnable( GL_LIGHTING )
             glEnable(GL_LIGHT1)
             glEnable(GL_LIGHT0)
@@ -127,7 +114,11 @@ class GameMain():
 
     def update(self):
         """physics/move guys."""
-        pass
+        if self.interact_mode:
+            x, y = pygame.mouse.get_rel()
+            glRotatef(x, 0,1,0)
+            glRotatef(y, 0,0,1)
+
 
 
     def toggle_light(self):
@@ -137,11 +128,14 @@ class GameMain():
         """handle events: keyboard, mouse, etc."""
         events = pygame.event.get()
         kmods = pygame.key.get_mods()
+        mousebutton_pressed = False
 
         for event in events:
+
             if event.type == pygame.QUIT:
                 self.done = True
             # event: keydown
+
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self.done = True
@@ -150,3 +144,18 @@ class GameMain():
                     self.gol.tick()
                 if event.key == K_l:
                     self.toggle_light()
+
+
+            ## Mousebutton 1 (left) klicked starts the interactive mode
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                self.demo_mode = False
+                self.interact_mode = True
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                self.demo_mode = True
+                self.interact_mode = False
+            ## Mousebutton left release ends the interactive mode
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
+                glTranslatef(0,1,1, 1 )
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
+                glTranslatef(0,-1,-1, 1 )
+
