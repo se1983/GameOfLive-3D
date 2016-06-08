@@ -29,4 +29,15 @@ def init():
     # https://www.sjbaker.org/steve/omniv/opengl_lighting.html
     glEnable ( GL_COLOR_MATERIAL )
 
+def draw(light_on):
+        # Lightning
+    if light_on:
+        glEnable( GL_LIGHTING )
+        glEnable(GL_LIGHT1)
+        glEnable(GL_LIGHT0)
+    else:
+        glDisable( GL_LIGHTING )
+        glDisable(GL_LIGHT1)
+        glDisable(GL_LIGHT0)
+
 

@@ -6,8 +6,8 @@ from OpenGL.GL import shaders
 from OpenGL.GLU import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, glFrustum
 
-from Graphics.geometrics import cube
-from Graphics.objects import draw_cube_Matrix
+from Graphics.geometrics import cube, wired_cube
+from Graphics.objects import draw_cube_Matrix, draw_coord
 from Graphics.shader import vertex,fragment
 from Graphics import colors, light
 
@@ -31,7 +31,8 @@ class GameMain():
         self.demo_mode = True
         self.interact_mode = False
         self.demo_speed = 1
-        self.light_on = False
+        self.light_on = True
+        self.alpha = 0.1
         self.board_size = board_size
 
         self.gol = gol
@@ -58,7 +59,7 @@ class GameMain():
 
 
     def __init_position(self):
-        glTranslatef(-2.5,-2.5, -8.0 * self.board_size, 1 )
+        glTranslatef(0,0, -8.0 * self.board_size, 1 )
         glRotatef(45, 1,0,1)
 
 
@@ -97,20 +98,13 @@ class GameMain():
             glRotatef(self.demo_speed, 3, 1, 1)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)
-        glClearColor(0.1,0.2,0.1,1)
-        draw_cube_Matrix(cube(), self.board_size, g=self.gol.g)
+        color  = colors.grey + (0.3,)
+        glClearColor(*color)
+        draw_cube_Matrix(cube(), self.board_size, g=self.gol.g, alpha=self.alpha)
 
-        # Lightning
-        if self.light_on:
-            glEnable( GL_LIGHTING )
-            glEnable(GL_LIGHT1)
-            glEnable(GL_LIGHT0)
-        else:
-            glDisable( GL_LIGHTING )
-            glDisable(GL_LIGHT1)
-            glDisable(GL_LIGHT0)
+        light.draw(self.light_on)
 
-        pygame.display.flip()
+        #pygame.display.flip()
 
     def update(self):
         """physics/move guys."""
@@ -123,6 +117,14 @@ class GameMain():
 
     def toggle_light(self):
         self.light_on = not self.light_on
+
+    def set_alpha(self, val):
+        if self.alpha + val < 0:
+            self.alpha = 0
+        elif self.alpha + val > 1:
+            self.alpha = 1
+        else:
+            self.alpha += val
 
     def handle_events(self):
         """handle events: keyboard, mouse, etc."""
@@ -144,6 +146,12 @@ class GameMain():
                     self.gol.tick()
                 if event.key == K_l:
                     self.toggle_light()
+                if event.key == K_f:
+                    pygame.display.toggle_fullscreen()
+                if event.key == K_a:
+                    self.set_alpha(val = -0.1)
+                if event.key == K_q:
+                    self.set_alpha(val = +0.1)
 
 
             ## Mousebutton 1 (left) klicked starts the interactive mode
