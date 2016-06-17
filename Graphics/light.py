@@ -9,7 +9,7 @@ from Graphics import colors
 def init():
     position = [100.5, 100.0, 100.0, 0.2]
 
-    light_color = {'ambient' : GLfloat_4(*colors.grey),
+    light_color = {'ambient' : GLfloat_4(*colors.dark_green),
                     'diffuse' : GLfloat_4(*colors.grey),
                     'specular': GLfloat_4(*colors.grey)
               }

@@ -32,7 +32,7 @@ class GameMain():
         self.interact_mode = False
         self.demo_speed = 1
         self.light_on = True
-        self.alpha = 0.1
+        self.alpha = 1
         self.board_size = board_size
 
         self.gol = gol
@@ -43,8 +43,8 @@ class GameMain():
         self.width, self.height = width, height
         self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
         pygame.display.set_caption( "sebsch's 3D LIFE <%s>" % "".join([str(i) for i in self.gol.ruleset]))
-
         gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
+
         # positioning
         self.__init_position()
         # Light
@@ -59,9 +59,15 @@ class GameMain():
 
 
     def __init_position(self):
+
         glTranslatef(0,0, -8.0 * self.board_size, 1 )
         glRotatef(45, 1,0,1)
-
+        #
+        #glOrtho(0, 1, 0,5.0,-5.0,5.0)
+        #glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 200.0);
+        #glMatrixMode(GL_MODELVIEW)
 
     def __init_light__(self):
 
@@ -71,11 +77,15 @@ class GameMain():
 
     def __init_zfilter__(self):
         glEnable( GL_DEPTH_TEST )
-        glEnable(GL_STENCIL_TEST)
+        #glEnable(GL_STENCIL_TEST)
+
 
     def __init_alpha__(self):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
+        glAlphaFunc ( GL_GREATER, 0.1 )
+        glEnable(GL_ALPHA_TEST)
+
 
     def __init_polyoffset(self):
         glPolygonOffset(1.0, 1.0)
@@ -97,7 +107,7 @@ class GameMain():
         if self.demo_mode:
             glRotatef(self.demo_speed, 3, 1, 1)
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
         color  = colors.grey + (0.3,)
         glClearColor(*color)
         draw_cube_Matrix(cube(), self.board_size, g=self.gol.g, alpha=self.alpha)
@@ -152,6 +162,7 @@ class GameMain():
                     self.set_alpha(val = -0.1)
                 if event.key == K_q:
                     self.set_alpha(val = +0.1)
+
 
 
             ## Mousebutton 1 (left) klicked starts the interactive mode

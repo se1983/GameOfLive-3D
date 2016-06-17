@@ -21,8 +21,8 @@ from random import randint
 
 if __name__ == "__main__":
 
-    size = 1
-    beeings = 1
+    size = 10
+    beeings = 190
     livings = [(randint(0, size-1),
                 randint(0, size-1),
                 randint(0, size-1)) for x in range(beeings)]
