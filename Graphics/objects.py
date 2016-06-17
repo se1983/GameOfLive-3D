@@ -5,10 +5,16 @@ from Graphics import colors
 
 ## TODO: REFACTOR TO OBJECT
 
+
+class Cube():
+    def __init__(self, ammount):
+        self.cube_matrix = None
+
 def draw_wired_cube(cube, color=(0.1,0.1,0.1), alpha=0.5):
     glBegin(GL_LINES)
     color = colors.grey + (alpha, )
     glColor4f(*color)
+    #[glVertex3f(*cube['vertices'][vertex] ) for edge in cube['edges'] for vertex in edge]
     [glVertex3f(*cube['vertices'][vertex] ) for edge in cube['edges'] for vertex in edge]
     glEnd()
 

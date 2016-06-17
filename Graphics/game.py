@@ -30,12 +30,12 @@ class GameMain():
         """
         self.demo_mode = True
         self.interact_mode = False
-        self.demo_speed = 1
+        self.demo_speed = 0
         self.light_on = True
         self.alpha = 1
         self.board_size = board_size
         self.eye_distance = 10
-
+        self.demo_angle = 0
         self.gol = gol
 
         pygame.init()
@@ -63,6 +63,7 @@ class GameMain():
         glMatrixMode(GL_PROJECTION);
         glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 200.0);
         glMatrixMode(GL_MODELVIEW)
+
 
     def __init_light__(self):
         light.init()
@@ -97,7 +98,7 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
-        color  = colors.grey + (0.3,)
+        color = colors.grey + (0.3,)
         glClearColor(*color)
         draw_cube_Matrix(cube(), self.board_size, g=self.gol.g, alpha=self.alpha)
 
@@ -113,10 +114,10 @@ class GameMain():
         gluLookAt(  0, 0, self.eye_distance,   # x,y,z Position Eye
                     0, 0, 0,     # x,y,z Centering
                     0, 1, 0)     # x,y,z Vec - UP
+        self.demo_angle += self.demo_speed
 
-        self.demo_speed += 1
         if self.demo_mode:
-            glRotatef(self.demo_speed, 3, 1, 1)
+            glRotatef(self.demo_angle, 3, 1, 1)
 
 
         if self.interact_mode:
@@ -125,7 +126,17 @@ class GameMain():
             glRotatef(y, 0,0,1)
 
 
+    def adjust_distance(self, val):
 
+        min = 10
+        max = 100
+
+        if self.eye_distance + val < min:
+            self.eye_distance = min
+        if self.eye_distance + val > max:
+            self.eye_distance = max
+        else:
+            self.eye_distance += val
 
     def toggle_light(self):
         self.light_on = not self.light_on
@@ -164,7 +175,10 @@ class GameMain():
                     self.set_alpha(val = -0.1)
                 if event.key == K_q:
                     self.set_alpha(val = +0.1)
-
+                if event.key == K_s:
+                    self.demo_speed += 1
+                if event.key == K_w:
+                    self.demo_speed -= 1
 
 
             ## Mousebutton 1 (left) klicked starts the interactive mode
@@ -177,9 +191,9 @@ class GameMain():
             ## Mousebutton left release ends the interactive mode
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
                 #glTranslatef(0,1,1, 1 )
-                self.eye_distance -= 0.3
+                self.adjust_distance(-0.3)
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
                 #glTranslatef(0,-1,-1, 1 )
-                self.eye_distance += 0.3
+                self.adjust_distance(0.3)
 
