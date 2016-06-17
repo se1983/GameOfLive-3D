@@ -3,6 +3,7 @@ from OpenGL.raw.GL.ARB.tessellation_shader import GL_TRIANGLES
 
 from Graphics import colors
 
+## TODO: REFACTOR TO OBJECT
 
 def draw_wired_cube(cube, color=(0.1,0.1,0.1), alpha=0.5):
     glBegin(GL_LINES)

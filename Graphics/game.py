@@ -34,6 +34,7 @@ class GameMain():
         self.light_on = True
         self.alpha = 1
         self.board_size = board_size
+        self.eye_distance = 10
 
         self.gol = gol
 
@@ -43,7 +44,7 @@ class GameMain():
         self.width, self.height = width, height
         self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
         pygame.display.set_caption( "sebsch's 3D LIFE <%s>" % "".join([str(i) for i in self.gol.ruleset]))
-        gluPerspective(45, (self.width/self.height), 0.1, 12.0 * self.board_size)
+        gluPerspective(45, (self.width/self.height), 0.1, 10.0 * self.board_size)
 
         # positioning
         self.__init_position()
@@ -59,25 +60,16 @@ class GameMain():
 
 
     def __init_position(self):
-
-        glTranslatef(0,0, -8.0 * self.board_size, 1 )
-        glRotatef(45, 1,0,1)
-        #
-        #glOrtho(0, 1, 0,5.0,-5.0,5.0)
-        #glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
+        glMatrixMode(GL_PROJECTION);
         glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 200.0);
-        #glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GL_MODELVIEW)
 
     def __init_light__(self):
-
-        # TODO: light looks terrible! looking just for shiny reflections
-        # Even with GL_SMOOTH there are Phong-reflections
         light.init()
 
     def __init_zfilter__(self):
         glEnable( GL_DEPTH_TEST )
-        #glEnable(GL_STENCIL_TEST)
+        glEnable(GL_STENCIL_TEST)
 
 
     def __init_alpha__(self):
@@ -104,24 +96,34 @@ class GameMain():
 
         # draw your stuff here. sprites, gui, etc....
 
-        if self.demo_mode:
-            glRotatef(self.demo_speed, 3, 1, 1)
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
         color  = colors.grey + (0.3,)
         glClearColor(*color)
         draw_cube_Matrix(cube(), self.board_size, g=self.gol.g, alpha=self.alpha)
 
         light.draw(self.light_on)
+        pygame.display.flip()
 
-        #pygame.display.flip()
+
 
     def update(self):
         """physics/move guys."""
+            ## zoom mit glLookat()
+        glLoadIdentity()
+        gluLookAt(  0, 0, self.eye_distance,   # x,y,z Position Eye
+                    0, 0, 0,     # x,y,z Centering
+                    0, 1, 0)     # x,y,z Vec - UP
+
+        self.demo_speed += 1
+        if self.demo_mode:
+            glRotatef(self.demo_speed, 3, 1, 1)
+
+
         if self.interact_mode:
-            x, y = pygame.mouse.get_rel()
+            x, y = pygame.mouse.get_pos()
             glRotatef(x, 0,1,0)
             glRotatef(y, 0,0,1)
+
 
 
 
@@ -174,7 +176,10 @@ class GameMain():
                 self.interact_mode = False
             ## Mousebutton left release ends the interactive mode
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
-                glTranslatef(0,1,1, 1 )
+                #glTranslatef(0,1,1, 1 )
+                self.eye_distance -= 0.3
+
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
-                glTranslatef(0,-1,-1, 1 )
+                #glTranslatef(0,-1,-1, 1 )
+                self.eye_distance += 0.3
 

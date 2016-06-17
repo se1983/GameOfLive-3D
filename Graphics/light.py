@@ -9,23 +9,23 @@ from Graphics import colors
 def init():
     position = [100.5, 100.0, 100.0, 0.2]
 
-    light_color = {'ambient' : GLfloat_4(*colors.dark_green),
+    light_color = {'ambient' : GLfloat_4(*colors.white),
                     'diffuse' : GLfloat_4(*colors.grey),
-                    'specular': GLfloat_4(*colors.grey)
+                    'specular': GLfloat_4(*colors.dark_green)
               }
 
     glLightfv(GL_LIGHT0, GL_POSITION, position)
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_color['ambient'])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color['diffuse'])
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_color['specular'])
-    glLightfv(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, (0.1,0,1))
+    glLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, (0.1,0,1))
 
 
     glLightfv(GL_LIGHT1, GL_POSITION, [-p for p in position])
     glLightfv( GL_LIGHT1, GL_AMBIENT, light_color['ambient'])
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light_color['diffuse'])
     glLightfv(GL_LIGHT1, GL_SPECULAR, GLfloat_4(0,0.3,0, 1))
-    glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, (0.1,1,0))
+    glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, (1,1,0))
     # https://www.sjbaker.org/steve/omniv/opengl_lighting.html
     glEnable ( GL_COLOR_MATERIAL )
 
