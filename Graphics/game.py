@@ -2,13 +2,11 @@ import pygame
 from pygame.locals import *
 
 from OpenGL.GL import *
-from OpenGL.GL import shaders
 from OpenGL.GLU import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, glFrustum
 
 from Graphics.geometrics import cube, wired_cube
-from Graphics.objects import draw_cube_Matrix, draw_coord
-from Graphics.shader import vertex,fragment
+from Graphics.objects import CubeMatrix
 from Graphics import colors, light
 
 from time import sleep
@@ -28,7 +26,7 @@ class GameMain():
             limit_fps = boolean toggles capping FPS, to share cpu, or let it run free.
             now = current time in Milliseconds. ( 1000ms = 1second)
         """
-        self.demo_mode = True
+        self.demo_mode = False
         self.interact_mode = False
         self.demo_speed = 0
         self.light_on = True
@@ -36,9 +34,12 @@ class GameMain():
         self.board_size = board_size
         self.eye_distance = 10
         self.demo_angle = 0
+        self.demo_angle_x = 0
+        self.demo_angle_y = 0
         self.gol = gol
 
         pygame.init()
+        self.playground = CubeMatrix(size=board_size)
 
         # save w, h, and screen
         self.width, self.height = width, height
@@ -72,13 +73,11 @@ class GameMain():
         glEnable( GL_DEPTH_TEST )
         glEnable(GL_STENCIL_TEST)
 
-
     def __init_alpha__(self):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
         glAlphaFunc ( GL_GREATER, 0.1 )
         glEnable(GL_ALPHA_TEST)
-
 
     def __init_polyoffset(self):
         glPolygonOffset(1.0, 1.0)
@@ -98,9 +97,12 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
+        # Background Color
         color = colors.grey + (0.3,)
         glClearColor(*color)
-        draw_cube_Matrix(cube(), self.board_size, g=self.gol.g, alpha=self.alpha)
+
+        # Draw Matrix of defined cubes
+        self.playground.draw(g=self.gol.g)
 
         light.draw(self.light_on)
         pygame.display.flip()
@@ -114,7 +116,10 @@ class GameMain():
         gluLookAt(  0, 0, self.eye_distance,   # x,y,z Position Eye
                     0, 0, 0,     # x,y,z Centering
                     0, 1, 0)     # x,y,z Vec - UP
+
+
         self.demo_angle += self.demo_speed
+
 
         if self.demo_mode:
             glRotatef(self.demo_angle, 3, 1, 1)
@@ -122,9 +127,10 @@ class GameMain():
 
         if self.interact_mode:
             x, y = pygame.mouse.get_pos()
-            glRotatef(x, 0,1,0)
-            glRotatef(y, 0,0,1)
-
+            self.demo_angle_x = x
+            self.demo_angle_y = y
+        glRotatef(self.demo_angle_x, 1, 0, 0)
+        glRotatef(self.demo_angle_y, 0, 1, 0)
 
     def adjust_distance(self, val):
 
@@ -183,11 +189,12 @@ class GameMain():
 
             ## Mousebutton 1 (left) klicked starts the interactive mode
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                self.demo_mode = False
+                if self.demo_mode:
+                    self.demo_mode = False
                 self.interact_mode = True
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                self.demo_mode = True
                 self.interact_mode = False
+                self.demo_mode = True
             ## Mousebutton left release ends the interactive mode
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
                 #glTranslatef(0,1,1, 1 )

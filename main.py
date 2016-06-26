@@ -14,15 +14,17 @@ from random import randint
 # DONE Life-Automat
 # Done Zell-Matrix zeichnen
 # Done Beleuchtung
-# TODO Zoom und drehen durch Maus
+# Done Zoom und drehen durch Maus
+# TODO objects -> Klassen
+# TODO Uebergaenge l->d / d->l
 # TODO HUD
 # TODO Steuerung durch config-files
 # TODO autorun
 
 if __name__ == "__main__":
 
-    size = 1
-    beeings = 1
+    size = 10
+    beeings = 400
     livings = [(randint(0, size-1),
                 randint(0, size-1),
                 randint(0, size-1)) for x in range(beeings)]
