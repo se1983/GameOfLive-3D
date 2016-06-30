@@ -15,7 +15,7 @@ class GameMain():
     # handles intialization of game and graphics, as well as game loop
     done = False
 
-    def __init__(self, gol, width=800, height=800, board_size=5):
+    def __init__(self, gol, width=800, height=800):
         """Initialize PyGame window.
 
         variables:
@@ -31,7 +31,7 @@ class GameMain():
         self.demo_speed = 0
         self.light_on = True
         self.alpha = 1
-        self.board_size = board_size
+        self.board_size = gol.size
         self.eye_distance = 10
         self.demo_angle = 0
         self.demo_angle_x = 0
@@ -39,7 +39,7 @@ class GameMain():
         self.gol = gol
 
         pygame.init()
-        self.playground = CubeMatrix(size=board_size)
+        self.playground = CubeMatrix(gol.size)
 
         # save w, h, and screen
         self.width, self.height = width, height

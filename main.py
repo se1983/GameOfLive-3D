@@ -24,7 +24,7 @@ from random import randint
 if __name__ == "__main__":
 
     size = 10
-    beeings = 400
+    beeings = 300
     livings = [(randint(0, size-1),
                 randint(0, size-1),
                 randint(0, size-1)) for x in range(beeings)]
@@ -32,5 +32,5 @@ if __name__ == "__main__":
     gol = GameOfLife(size, livings, run=False, ruleset="2555")
     gol.start()
 
-    game = GameMain(gol=gol, board_size=size)
+    game = GameMain(gol=gol)
     game.main_loop()

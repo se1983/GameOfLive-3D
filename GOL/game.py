@@ -16,6 +16,7 @@ class GameOfLife(Thread):
         if type(n) == int:
             n = [n,n,n]
         self.n = n
+        self.size = n[0]
 
         # get True if alive and False if dead
         self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
