@@ -3,12 +3,15 @@ from OpenGL.raw.GL.ARB.tessellation_shader import GL_TRIANGLES
 
 from Graphics import colors, geometrics
 
-from math import sin, pi
+from math import sin, pi, e
 from copy import deepcopy
 
 f = lambda x: sin(x)
-grans = 30.0
+grans = 10.0
 A = [f(n/grans) for n in range(int(pi/4 * grans))]
+print(A)
+
+
 
 
 class Cube():
@@ -16,6 +19,8 @@ class Cube():
         self.cube = geometrics.cube()
         self.position = position
         self.status = 'draw'
+        self.suface_color = colors.draw['surface']
+        self.wire_color = colors.draw['wires']
 
         # Alphablending 90 degrees from sin(x)
         self.alpha_range = A
@@ -24,8 +29,8 @@ class Cube():
     def draw(self):
 
         glTranslatef(*self.__translation(+2.1))
-        self.__draw_wired_cube(colors.white)
-        self.__draw_triangled_cube(colors.black)
+        self.__draw_wired_cube(self.wire_color)
+        self.__draw_triangled_cube(self.suface_color)
         self.__fader()
         glTranslatef(*self.__translation(-2.1))
 
@@ -35,15 +40,17 @@ class Cube():
             return
 
         i = self.alpha_range.index(self.alpha)
+
         if self.status == 'blend_in':
             i += 1
         elif self.status == 'blend_out':
             i -= 1
+
         try:
             self.alpha = self.alpha_range[i]
         except IndexError:
-            print("switch to drawmode [%s, %s, %s]" % self.position)
             self.status = 'draw'
+            self.surface_color = colors.draw['surface']
 
     def __translation(self, factor):
         return [(factor * n) for n in self.position]
@@ -53,7 +60,8 @@ class Cube():
         self.status = 'blend_in'
 
     def blend_out(self):
-        self.alpha = self.alpha_range[-1]
+        #self.alpha = self.alpha_range[-1]
+        self.surface_color = colors.draw['die']
         self.status = 'blend_out'
 
     def __draw_wired_cube(self, color):
@@ -107,11 +115,13 @@ class CubeMatrix():
         for i, area in enumerate(self.playground):
             for j, row in enumerate(area):
                 for k, cell in enumerate(row):
-                    # Cell doen't is alive
 
                     new = g[i][j][k]
                     old = self._g[i][j][k]
 
+                    if cell.status == 'blend_in':
+                        cell.draw()
+                        continue
 
                     if not new and not old:
                         continue

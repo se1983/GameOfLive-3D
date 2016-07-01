@@ -16,7 +16,7 @@ class GameMain():
     # handles intialization of game and graphics, as well as game loop
     done = False
 
-    def __init__(self, gol, width=800, height=800):
+    def __init__(self, gol, width=2000, height=2000):
         """Initialize PyGame window.
 
         variables:
@@ -47,7 +47,7 @@ class GameMain():
         self.width, self.height = width, height
         self.screen = pygame.display.set_mode((self.width, self.height), OPENGL)
         pygame.display.set_caption("sebsch's 3D LIFE <%s>" % "".join([str(i) for i in self.gol.ruleset]))
-        gluPerspective(45, (self.width / self.height), 0.1, 10.0 * self.board_size)
+        gluPerspective(45, 1, 0.1, 10.0 * self.board_size)
 
         # positioning
         self.__init_position()
@@ -86,6 +86,10 @@ class GameMain():
     def __init_antialiasing(self):
         glEnable(GL_POLYGON_SMOOTH)
         glEnable(GL_LINE_SMOOTH)
+        glEnable(GL_POINT_SMOOTH)
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
 
     def main_loop(self):
         """Game() main loop."""
@@ -101,9 +105,8 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # Background Color
 
-        glClearColor(*(colors.white + (0.3,)))
+        glClearColor(*(colors.draw['background']))
 
         # Draw Matrix of defined cubes
         self.playground.draw(self.gol)
