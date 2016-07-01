@@ -5,7 +5,7 @@ from time import sleep
 
 class GameOfLife(Thread):
 
-    def __init__(self, n, beings, run=False, ruleset='2555'):
+    def __init__(self, n, livings, run=False, ruleset='2555'):
 
         Thread.__init__(self)
         self.__run = run
@@ -15,11 +15,12 @@ class GameOfLife(Thread):
         # As standard n should be a 3d-list but if it's just integer we make one.
         if type(n) == int:
             n = [n,n,n]
-        self.n = n
         self.size = n[0]
 
         # get True if alive and False if dead
-        self.g = [[[(x, y, z) in beings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
+        self.g = [[[(x, y, z) in livings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
+        self.n = n
+
 
     def run(self):
         self.__main_loop()
@@ -31,8 +32,6 @@ class GameOfLife(Thread):
         """ Next step
         :return:
         """
-        # @TODO Make me a iterator object
-
         self.g = self.__game(self.g)
 
     def neighbor_count(self):
@@ -87,7 +86,7 @@ class GameOfLife(Thread):
                         if self.g[i-1][j-1][k]:
                             n[i][j][k] += 1
                     except IndexError:
-                        # ignore the edges of the playground
+                        # ignore the edges
                         pass
         return n
 

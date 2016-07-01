@@ -1,64 +1,76 @@
-
 from OpenGL.GL import *
 from OpenGL.raw.GL.ARB.tessellation_shader import GL_TRIANGLES
 
 from Graphics import colors, geometrics
 
+from math import sin, pi
+from copy import deepcopy
+
+f = lambda x: sin(x)
+grans = 30.0
+A = [f(n/grans) for n in range(int(pi/4 * grans))]
+
 
 class Cube():
-
     def __init__(self, position):
         self.cube = geometrics.cube()
-        self.alpha = 0.5
         self.position = position
         self.status = 'draw'
-        self.alpha_range = [a_value/1000 for a_value in range(1000)]
+
+        # Alphablending 90 degrees from sin(x)
+        self.alpha_range = A
+        self.alpha = self.alpha_range[-1]
 
     def draw(self):
 
-        self.__fader()
-
         glTranslatef(*self.__translation(+2.1))
-        self.__draw_wired_cube(colors.grey, self.alpha)
-        self.__draw_triangled_cube(colors.green, self.alpha)
+        self.__draw_wired_cube(colors.white)
+        self.__draw_triangled_cube(colors.black)
+        self.__fader()
         glTranslatef(*self.__translation(-2.1))
 
     def __fader(self):
-        try:
-            if self.status == 'blend_in':
-                self.alpha = self.alpha_range[self.alpha_range.index(self.alpha) + 1]
-            elif self.status == 'blend_out':
-                self.alpha = self.alpha_range[self.alpha_range.index(self.alpha) - 1]
-        except IndexError:
-            self.status = 'draw'
-        #print(self.alpha)
 
+        if self.status == 'draw':
+            return
+
+        i = self.alpha_range.index(self.alpha)
+        if self.status == 'blend_in':
+            i += 1
+        elif self.status == 'blend_out':
+            i -= 1
+        try:
+            self.alpha = self.alpha_range[i]
+        except IndexError:
+            print("switch to drawmode [%s, %s, %s]" % self.position)
+            self.status = 'draw'
 
     def __translation(self, factor):
         return [(factor * n) for n in self.position]
 
-
-
     def blend_in(self):
+        self.alpha = self.alpha_range[0]
         self.status = 'blend_in'
-        self.draw()
 
     def blend_out(self):
+        self.alpha = self.alpha_range[-1]
         self.status = 'blend_out'
-        self.draw()
 
-    def __draw_wired_cube(self, color, alpha):
+    def __draw_wired_cube(self, color):
         cube = geometrics.wired_cube()
+
         glBegin(GL_LINES)
-        color += (alpha, )
+        color += (self.alpha,)
         glColor4f(*color)
-        [glVertex3f(*cube['vertices'][vertex]) for edge in cube['edges'] for vertex in edge]
+        for edge in cube['edges']:
+            for vertex in edge:
+                glVertex3f(*cube['vertices'][vertex])
         glEnd()
 
-    def __draw_triangled_cube(self, color, alpha):
+    def __draw_triangled_cube(self, color):
         cube = geometrics.triangled_cube()
         glBegin(GL_TRIANGLES)
-        color += (alpha, )
+        color += (self.alpha,)
         glColor4f(*color)
 
         for i, triangle in enumerate(cube['triangles']):
@@ -68,51 +80,49 @@ class Cube():
         glEnd()
 
 
-
 class CubeMatrix():
-
     # Um spaeter Sortfunktionen aufrufen zu koennen,
     # so muessen die Positiotionen gleich bei der
     # Initialisierung mitgespeichert werden!
 
-    def __init__(self, size):
+    def __init__(self, gol):
 
         # This Expression repressents a 3D-Matrix of Cube-Objects
         self.playground = [[[Cube((i, j, k))
-                             for k in range(size)]
-                            for j in range(size)]
-                           for i in range(size)]
+                             for k in range(gol.size)]
+                            for j in range(gol.size)]
+                           for i in range(gol.size)]
         # here we safe the played rounds
-        self.rounds = []
         # We save the last gol object because of the check if fade in or out
-        self.old_g = None
-        self.size = size
 
-    def draw(self, g):
+        # mem of the last round
+        self._g = deepcopy(gol.g)
+        self.size = gol.size * -2.1
 
-        if not self.old_g:
-            self.old_g = g
+    def draw(self, gol):
+        g = deepcopy(gol.g)
 
-        glTranslatef(*[self.size * -2.1 * 0.5 for _ in range(3)])
+        glTranslatef(*[self.size * 0.5 + 1 for _ in range(len('xyz'))])
 
         for i, area in enumerate(self.playground):
             for j, row in enumerate(area):
                 for k, cell in enumerate(row):
                     # Cell doen't is alive
 
+                    new = g[i][j][k]
+                    old = self._g[i][j][k]
 
-                    if not g[i][j][k] and not self.old_g[i][j][k]:
-                        print("nothing to see here")
+
+                    if not new and not old:
                         continue
-                    if not g[i][j][k] and self.old_g[i][j][k]:
-                        print("cell dies")
+
+                    if (not new) and old:
                         cell.blend_out()
-                    elif g[i][j][k] and not self.old_g[i][j][k]:
+
+                    if new and (not old):
                         cell.blend_in()
-                        print("cell come to life")
+
                     cell.draw()
-        self.old_g = g
+        self._g = g
 
-        glTranslatef(*[self.size * 2.1 * 0.5 for _ in range(3)])
-
-
+        glTranslatef(*[self.size * -0.5 - 1 for _ in range(len('xyz'))])
