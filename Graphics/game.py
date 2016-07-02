@@ -33,7 +33,7 @@ class GameMain():
         self.light_on = True
         self.alpha = 1
         self.board_size = gol.size
-        self.eye_distance = 10
+        self.eye_distance = 40
         self.demo_angle = 0
         self.demo_angle_x = 0
         self.demo_angle_y = 0
@@ -84,12 +84,13 @@ class GameMain():
         glEnable(GL_POLYGON_OFFSET_FILL)
 
     def __init_antialiasing(self):
-        glEnable(GL_POLYGON_SMOOTH)
-        glEnable(GL_LINE_SMOOTH)
-        glEnable(GL_POINT_SMOOTH)
+        #glEnable(GL_POLYGON_SMOOTH)
+        #glEnable(GL_LINE_SMOOTH)
+        #glEnable(GL_POINT_SMOOTH)
         glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
 
-        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+
 
     def main_loop(self):
         """Game() main loop."""
@@ -108,8 +109,12 @@ class GameMain():
 
         glClearColor(*(colors.draw['background']))
 
+
+
         # Draw Matrix of defined cubes
         self.playground.draw(self.gol)
+
+
 
         light.draw(self.light_on)
         # Update the full display Surface to the screen

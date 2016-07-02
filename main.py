@@ -21,15 +21,16 @@ from random import randint
 if __name__ == "__main__":
 
     size = 16
-    beeings = 800
+    beeings = 600
+    # no twins allowed, the second dies
     livings = [(randint(0, size-1),
                 randint(0, size-1),
                 randint(0, size-1)) for x in range(beeings)]
 
-    gol = GameOfLife(size, livings, run=False, ruleset="2555")
-    #gol = GameOfLife(size, livings, run=False, ruleset="5655")
+    gol = GameOfLife(size, livings, run=True, ruleset="2555")
+    #gol = GameOfLife(size, livings, run=True, ruleset="5655")
 
-    #gol.start()
+    gol.start()
 
     game = GameMain(gol=gol)
     game.main_loop()

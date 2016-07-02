@@ -8,21 +8,20 @@ from copy import deepcopy
 
 f = lambda x: sin(x)
 grans = 10.0
-A = [f(n/grans) for n in range(int(pi/4 * grans))]
+A = [f(n/grans) for n in range(int(pi/2 * grans))]
 print(A)
 
 
 
 
 class Cube():
+
     def __init__(self, position):
         self.cube = geometrics.cube()
         self.position = position
         self.status = 'draw'
         self.suface_color = colors.draw['surface']
         self.wire_color = colors.draw['wires']
-
-        # Alphablending 90 degrees from sin(x)
         self.alpha_range = A
         self.alpha = self.alpha_range[-1]
 
@@ -119,9 +118,9 @@ class CubeMatrix():
                     new = g[i][j][k]
                     old = self._g[i][j][k]
 
-                    if cell.status == 'blend_in':
-                        cell.draw()
-                        continue
+                    #if cell.status == 'blend_out':
+                    #    cell.draw()
+                    #    continue
 
                     if not new and not old:
                         continue

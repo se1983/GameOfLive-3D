@@ -1,16 +1,28 @@
-dark_green = (0.0, 0.1, 0.0)
+dark_green = (0.0, 0.6, 0.0)
 green = (0.0, 1, 0.0)
-
-red = (1,0,0)
+red = (1, 0, 0)
 grey = (0.3, 0.3, 0.3)
+dark_grey = (0.2, 0.2, 0.2)
 white = (1, 1, 1)
 black = (0, 0, 0)
-
+cyan = (0, 1, 1)
+magenta = (1, 0, 1)
+yellow = (1, 1, 0)
 
 draw = {
-    'background': grey + (1,),
-    'wires': black,
+    'background': black + (1,),
+    'wires': dark_green,
     'surface': white,
     'die': red,
-    'born': green
+    'born': green,
+    'light_0' :{
+        'ambi' : white,
+        'diff' : grey,
+        'spec' : white
+    },
+    'light_1' :{
+        'ambi' : white,
+        'diff' : grey,
+        'spec' : white
+    }
 }

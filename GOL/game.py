@@ -4,7 +4,6 @@ from time import sleep
 
 
 class GameOfLife(Thread):
-
     def __init__(self, n, livings, run=False, ruleset='2555'):
 
         Thread.__init__(self)
@@ -14,13 +13,12 @@ class GameOfLife(Thread):
         # This helps to generalise.
         # As standard n should be a 3d-list but if it's just integer we make one.
         if type(n) == int:
-            n = [n,n,n]
+            n = [n, n, n]
         self.size = n[0]
 
         # get True if alive and False if dead
         self.g = [[[(x, y, z) in livings for x in xrange(n[0])] for y in xrange(n[1])] for z in xrange(n[2])]
         self.n = n
-
 
     def run(self):
         self.__main_loop()
@@ -47,43 +45,43 @@ class GameOfLife(Thread):
                 for k, e in enumerate(r):
                     try:
                         # check the sides
-                        if self.g[i][j][k+1]:
+                        if self.g[i][j][k + 1]:
                             n[i][j][k] += 1
-                        if self.g[i][j][k-1]:
+                        if self.g[i][j][k - 1]:
                             n[i][j][k] += 1
-                        if  self.g[i][j+1][k]:
+                        if self.g[i][j + 1][k]:
                             n[i][j][k] += 1
-                        if self.g[i][j-1][k]:
+                        if self.g[i][j - 1][k]:
                             n[i][j][k] += 1
-                        if self.g[i+1][j][k]:
+                        if self.g[i + 1][j][k]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j][k]:
+                        if self.g[i - 1][j][k]:
                             n[i][j][k] += 1
                         # counting also the neighbors
                         # on the edges
-                        if self.g[i+1][j+1][k+1]:
+                        if self.g[i + 1][j + 1][k + 1]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j+1][k+1]:
+                        if self.g[i - 1][j + 1][k + 1]:
                             n[i][j][k] += 1
-                        if self.g[i+1][j-1][k+1]:
+                        if self.g[i + 1][j - 1][k + 1]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j-1][k+1]:
+                        if self.g[i - 1][j - 1][k + 1]:
                             n[i][j][k] += 1
-                        if self.g[i+1][j+1][k-1]:
+                        if self.g[i + 1][j + 1][k - 1]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j+1][k-1]:
+                        if self.g[i - 1][j + 1][k - 1]:
                             n[i][j][k] += 1
-                        if self.g[i+1][j-1][k-1]:
+                        if self.g[i + 1][j - 1][k - 1]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j-1][k-1]:
+                        if self.g[i - 1][j - 1][k - 1]:
                             n[i][j][k] += 1
-                        if self.g[i+1][j+1][k]:
+                        if self.g[i + 1][j + 1][k]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j+1][k]:
+                        if self.g[i - 1][j + 1][k]:
                             n[i][j][k] += 1
-                        if self.g[i+1][j-1][k]:
+                        if self.g[i + 1][j - 1][k]:
                             n[i][j][k] += 1
-                        if self.g[i-1][j-1][k]:
+                        if self.g[i - 1][j - 1][k]:
                             n[i][j][k] += 1
                     except IndexError:
                         # ignore the edges
@@ -123,10 +121,3 @@ class GameOfLife(Thread):
         while self.__run:
             sleep(1)
             self.tick()
-
-
-
-
-
-
-
