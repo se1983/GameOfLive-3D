@@ -21,7 +21,7 @@ from random import randint
 if __name__ == "__main__":
 
     size = 16
-    beeings = 600
+    beeings = 400
     # no twins allowed, the second dies
     livings = [(randint(0, size-1),
                 randint(0, size-1),

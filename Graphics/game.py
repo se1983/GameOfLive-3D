@@ -88,7 +88,8 @@ class GameMain():
         #glEnable(GL_LINE_SMOOTH)
         #glEnable(GL_POINT_SMOOTH)
         glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        #glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        #glEnable(GL_POLYGON_SMOOTH)
 
 
 
@@ -105,7 +106,9 @@ class GameMain():
 
         # draw your stuff here. sprites, gui, etc....
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
+
+
 
         glClearColor(*(colors.draw['background']))
 

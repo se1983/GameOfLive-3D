@@ -11,18 +11,18 @@ yellow = (1, 1, 0)
 
 draw = {
     'background': black + (1,),
-    'wires': dark_green,
+    'wires': white,
     'surface': white,
     'die': red,
     'born': green,
     'light_0' :{
         'ambi' : white,
-        'diff' : grey,
+        'diff' : white,
         'spec' : white
     },
     'light_1' :{
         'ambi' : white,
-        'diff' : grey,
+        'diff' : white,
         'spec' : white
     }
 }

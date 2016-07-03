@@ -9,10 +9,6 @@ from copy import deepcopy
 f = lambda x: sin(x)
 grans = 10.0
 A = [f(n/grans) for n in range(int(pi/2 * grans))]
-print(A)
-
-
-
 
 class Cube():
 
@@ -28,7 +24,7 @@ class Cube():
     def draw(self):
 
         glTranslatef(*self.__translation(+2.1))
-        self.__draw_wired_cube(self.wire_color)
+        #self.__draw_wired_cube(self.wire_color)
         self.__draw_triangled_cube(self.suface_color)
         self.__fader()
         glTranslatef(*self.__translation(-2.1))
