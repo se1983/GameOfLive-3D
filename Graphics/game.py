@@ -49,15 +49,10 @@ class GameMain():
         pygame.display.set_caption("sebsch's 3D LIFE <%s>" % "".join([str(i) for i in self.gol.ruleset]))
         gluPerspective(45, 1, 0.1, 10.0 * self.board_size)
 
-        # positioning
         self.__init_position()
-        # Light
         self.__init_light__()
-        # Z-Filter
         self.__init_zfilter__()
-        # Transparent objects
         self.__init_alpha__()
-        # Offset for better displaying
         self.__init_polyoffset()
         self.__init_antialiasing()
 
@@ -84,14 +79,12 @@ class GameMain():
         glEnable(GL_POLYGON_OFFSET_FILL)
 
     def __init_antialiasing(self):
-        #glEnable(GL_POLYGON_SMOOTH)
-        #glEnable(GL_LINE_SMOOTH)
-        #glEnable(GL_POINT_SMOOTH)
-        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
-        #glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-        #glEnable(GL_POLYGON_SMOOTH)
-
-
+        glEnable(GL_POLYGON_SMOOTH)
+        glEnable(GL_LINE_SMOOTH)
+        glEnable(GL_POINT_SMOOTH)
+        # glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+        # glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        # glEnable(GL_POLYGON_SMOOTH)
 
     def main_loop(self):
         """Game() main loop."""
@@ -99,7 +92,6 @@ class GameMain():
             self.handle_events()
             self.update()
             self.draw()
-            #sleep(0.01)
 
     def draw(self):
         """draw screen"""
@@ -107,17 +99,10 @@ class GameMain():
         # draw your stuff here. sprites, gui, etc....
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
-
-
-
         glClearColor(*(colors.draw['background']))
-
-
 
         # Draw Matrix of defined cubes
         self.playground.draw(self.gol)
-
-
 
         light.draw(self.light_on)
         # Update the full display Surface to the screen
@@ -145,9 +130,7 @@ class GameMain():
         if self.do_step:
             self.do_step = False
             self.gol.tick()
-        #self.gol.tick()
-
-
+            # self.gol.tick()
 
     def adjust_distance(self, val):
 

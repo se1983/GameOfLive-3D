@@ -6,9 +6,11 @@ from Graphics import colors, geometrics
 from math import sin, pi, e
 from copy import deepcopy
 
+
+# List of values for the alpha_blending
 f = lambda x: sin(x)
-grans = 10.0
-A = [f(n/grans) for n in range(int(pi/2 * grans))]
+frames = 10.0
+A = [f(n / frames) for n in range(int(pi / 2 * frames))]
 
 class Cube():
 
@@ -16,36 +18,49 @@ class Cube():
         self.cube = geometrics.cube()
         self.position = position
         self.status = 'draw'
-        self.suface_color = colors.draw['surface']
+        self.surface_color = colors.draw['surface']
         self.wire_color = colors.draw['wires']
         self.alpha_range = A
         self.alpha = self.alpha_range[-1]
 
-    def draw(self):
+    def draw(self, neighbors=-1):
 
         glTranslatef(*self.__translation(+2.1))
         #self.__draw_wired_cube(self.wire_color)
-        self.__draw_triangled_cube(self.suface_color)
+        if neighbors < 0:
+            self.surface_color = colors.draw['surface']
+        else:
+            self.surface_color = colors.heatmap[neighbors]
+        self.__draw_triangled_cube(self.surface_color)
         self.__fader()
         glTranslatef(*self.__translation(-2.1))
 
     def __fader(self):
+        """
+        Iterating over values for alphablending.
 
+        Values are defined global in this module.
+        :return: :None
+        """
         if self.status == 'draw':
             return
-
         i = self.alpha_range.index(self.alpha)
-
         if self.status == 'blend_in':
             i += 1
         elif self.status == 'blend_out':
             i -= 1
-
+            # -1 don't throws IndexError so
+            # we have to handle this here.
+            if i <= -1:
+                self.status = 'draw'
+                i = len(A)
+                return
         try:
             self.alpha = self.alpha_range[i]
         except IndexError:
             self.status = 'draw'
             self.surface_color = colors.draw['surface']
+
 
     def __translation(self, factor):
         return [(factor * n) for n in self.position]
@@ -55,8 +70,6 @@ class Cube():
         self.status = 'blend_in'
 
     def blend_out(self):
-        #self.alpha = self.alpha_range[-1]
-        self.surface_color = colors.draw['die']
         self.status = 'blend_out'
 
     def __draw_wired_cube(self, color):
@@ -78,15 +91,13 @@ class Cube():
 
         for i, triangle in enumerate(cube['triangles']):
             glNormal3f(*cube['normals'][i])
+            #glNormal3f(*[-n for n in cube['normals'][i]])
             for vertex in triangle:
                 glVertex3f(*cube['vertices'][vertex])
         glEnd()
 
 
 class CubeMatrix():
-    # Um spaeter Sortfunktionen aufrufen zu koennen,
-    # so muessen die Positiotionen gleich bei der
-    # Initialisierung mitgespeichert werden!
 
     def __init__(self, gol):
 
@@ -95,39 +106,37 @@ class CubeMatrix():
                              for k in range(gol.size)]
                             for j in range(gol.size)]
                            for i in range(gol.size)]
-        # here we safe the played rounds
-        # We save the last gol object because of the check if fade in or out
-
-        # mem of the last round
+        # Saving the g-Matrix
         self._g = deepcopy(gol.g)
+        # The size of the playground
         self.size = gol.size * -2.1
 
-    def draw(self, gol):
-        g = deepcopy(gol.g)
+    def draw(self, gol, FX_appear=True, FX_disappear=False):
 
+        # saving the state of gol's g
+        g = deepcopy(gol.g)
+        # translation for centric universe
         glTranslatef(*[self.size * 0.5 + 1 for _ in range(len('xyz'))])
 
         for i, area in enumerate(self.playground):
             for j, row in enumerate(area):
                 for k, cell in enumerate(row):
-
                     new = g[i][j][k]
                     old = self._g[i][j][k]
 
-                    #if cell.status == 'blend_out':
-                    #    cell.draw()
-                    #    continue
-
-                    if not new and not old:
+                    # Status 'blend_out' also means the object
+                    # is most likely not existing in g and _g
+                    # so we ignore it here.
+                    if not new and not old and not cell.status == 'blend_out':
                         continue
 
-                    if (not new) and old:
+                    # dying and bearing
+                    if (not new) and old and FX_disappear :
                         cell.blend_out()
-
-                    if new and (not old):
+                    if new and (not old) and FX_appear:
                         cell.blend_in()
-
-                    cell.draw()
-        self._g = g
-
+                    # Show the cell.
+                    cell.draw(-1)
+        self._g = deepcopy(g)
+        # Translation back in the Center
         glTranslatef(*[self.size * -0.5 - 1 for _ in range(len('xyz'))])
