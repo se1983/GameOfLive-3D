@@ -16,7 +16,7 @@ from random import randint
 
 
 def main():
-    size = 10
+    size = 16
     beeings = 400
     # no twins allowed, the second dies
     livings = [(randint(0, size-1),
