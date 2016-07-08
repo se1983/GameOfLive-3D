@@ -185,6 +185,8 @@ class GameMain():
                     self.demo_speed += 1
                 if event.key == K_w:
                     self.demo_speed -= 1
+                if event.key == K_r:
+                    self.gol.toggle_run()
 
 
             ## Mousebutton 1 (left) klicked starts the interactive mode

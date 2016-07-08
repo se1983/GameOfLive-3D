@@ -27,10 +27,9 @@ class Cube():
 
         glTranslatef(*self.__translation(+2.1))
         #self.__draw_wired_cube(self.wire_color)
-        if neighbors < 0:
-            self.surface_color = colors.draw['surface']
-        else:
-            self.surface_color = colors.heatmap[neighbors]
+        if self.status == 'draw' and not neighbors < 0:
+            self.surface_color = colors.heatmap[neighbors][0:4]
+
         self.__draw_triangled_cube(self.surface_color)
         self.__fader()
         glTranslatef(*self.__translation(-2.1))
@@ -66,10 +65,12 @@ class Cube():
         return [(factor * n) for n in self.position]
 
     def blend_in(self):
+        self.surface_color = colors.draw['born']
         self.alpha = self.alpha_range[0]
         self.status = 'blend_in'
 
     def blend_out(self):
+        self.surface_color = colors.draw['die']
         self.status = 'blend_out'
 
     def __draw_wired_cube(self, color):
@@ -87,11 +88,10 @@ class Cube():
         cube = geometrics.triangled_cube()
         glBegin(GL_TRIANGLES)
         color += (self.alpha,)
-        glColor4f(*color)
+        glColor4f(*color[0:4])
 
         for i, triangle in enumerate(cube['triangles']):
             glNormal3f(*cube['normals'][i])
-            #glNormal3f(*[-n for n in cube['normals'][i]])
             for vertex in triangle:
                 glVertex3f(*cube['vertices'][vertex])
         glEnd()
@@ -111,7 +111,7 @@ class CubeMatrix():
         # The size of the playground
         self.size = gol.size * -2.1
 
-    def draw(self, gol, FX_appear=True, FX_disappear=False):
+    def draw(self, gol, FX_appear=True, FX_disappear=True, heatmap=True):
 
         # saving the state of gol's g
         g = deepcopy(gol.g)
@@ -131,12 +131,15 @@ class CubeMatrix():
                         continue
 
                     # dying and bearing
-                    if (not new) and old and FX_disappear :
+                    if (not new) and old and FX_disappear:
                         cell.blend_out()
                     if new and (not old) and FX_appear:
                         cell.blend_in()
                     # Show the cell.
-                    cell.draw(-1)
+                    if heatmap:
+                        cell.draw(gol.neighbors[i][j][k])
+                    else:
+                        cell.draw(-1)
         self._g = deepcopy(g)
         # Translation back in the Center
         glTranslatef(*[self.size * -0.5 - 1 for _ in range(len('xyz'))])

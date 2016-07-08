@@ -4,10 +4,11 @@ from time import sleep
 
 
 class GameOfLife(Thread):
-    def __init__(self, n, livings, run=False, ruleset='2555'):
+    def __init__(self, n, livings, runner=False, ruleset='2555'):
 
         Thread.__init__(self)
-        self.__run = run
+        self.runner = runner
+        self.done = False
         self.ruleset = [int(s) for s in ruleset]
 
         # get True if alive and False if dead
@@ -16,14 +17,20 @@ class GameOfLife(Thread):
         self.size = n
         self.neighbors = self.neighbor_count()
 
+
     def run(self):
         self.__main_loop()
+
     def kill(self):
-        self.__run = False
+        self.done = True
+
     def __main_loop(self):
-        while self.__run:
+        while not self.done:
             sleep(1)
-            self.tick()
+            if self.runner:
+                self.tick()
+    def toggle_run(self):
+        self.runner = not self.runner
 
 
     def tick(self):

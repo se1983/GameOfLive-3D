@@ -15,8 +15,8 @@ from random import randint
 # TODO Steuerung durch config-files
 # Done autorun
 
-if __name__ == "__main__":
 
+def main():
     size = 15
     beeings = 400
     # no twins allowed, the second dies
@@ -24,9 +24,13 @@ if __name__ == "__main__":
                 randint(0, size-1),
                 randint(0, size-1)) for x in range(beeings)]
 
-    gol = GameOfLife(size, livings, run=True, ruleset="2555")
+    gol = GameOfLife(size, livings, runner=True, ruleset="2555")
     #gol = GameOfLife(size, livings, run=True, ruleset="5655")
     gol.start()
 
     game = GameMain(gol=gol)
     game.main_loop()
+
+
+if __name__ == "__main__":
+    main()

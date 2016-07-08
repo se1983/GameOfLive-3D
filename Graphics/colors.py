@@ -10,14 +10,31 @@ cyan = (0, 1, 1)
 magenta = (1, 0, 1)
 yellow = (1, 1, 0)
 
-heatmap = [black, blue, cyan, green, yellow, red, white]
+
+def ipol(col_1, col_2):
+    return tuple([ (col_1[c] + col_2[c]) * 1/2.0 for c in range(len('rgb')) ])
+
+heatmap = [
+           blue,
+           ipol(blue, cyan),
+           cyan,
+           ipol(cyan, green),
+           green,
+           ipol(green, yellow),
+           yellow,
+           ipol(yellow, red),
+           red,
+           ipol(red, magenta),
+           magenta,
+           ipol(magenta, white),
+           white]
 
 draw = {
     'background': black + (1,),
     'wires': white,
     'surface': white,
-    'die': red,
-    'born': green,
+    'die': dark_grey,
+    'born': grey,
     'light_0' :{
         'ambi' : white,
         'diff' : white,
