@@ -29,6 +29,8 @@ class Cube():
         #self.__draw_wired_cube(self.wire_color)
         if self.status == 'draw' and not neighbors < 0:
             self.surface_color = colors.heatmap[neighbors][0:4]
+        if neighbors == -1:
+            self.surface_color = colors.draw['surface']
 
         self.__draw_triangled_cube(self.surface_color)
         self.__fader()

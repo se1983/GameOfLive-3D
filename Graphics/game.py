@@ -39,6 +39,7 @@ class GameMain():
         self.demo_angle_y = 0
         self.gol = gol
         self.do_step = False
+        self.heatmap = False
 
         pygame.init()
         self.playground = CubeMatrix(self.gol)
@@ -102,7 +103,7 @@ class GameMain():
         glClearColor(*(colors.draw['background']))
 
         # Draw Matrix of defined cubes
-        self.playground.draw(self.gol)
+        self.playground.draw(self.gol, heatmap=self.heatmap)
 
         light.draw(self.light_on)
         # Update the full display Surface to the screen
@@ -187,6 +188,12 @@ class GameMain():
                     self.demo_speed -= 1
                 if event.key == K_r:
                     self.gol.toggle_run()
+                if event.key == K_h:
+                    self.heatmap = True
+
+            elif event.type == KEYUP:
+                if event.key == K_h:
+                    self.heatmap = False
 
 
             ## Mousebutton 1 (left) klicked starts the interactive mode

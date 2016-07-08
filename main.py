@@ -11,20 +11,19 @@ from random import randint
 # Done Beleuchtung
 # Done Zoom und drehen durch Maus
 # Done Uebergaenge l->d / d->l
-# TODO HUD
 # TODO Steuerung durch config-files
 # Done autorun
 
 
 def main():
-    size = 15
+    size = 10
     beeings = 400
     # no twins allowed, the second dies
     livings = [(randint(0, size-1),
                 randint(0, size-1),
                 randint(0, size-1)) for x in range(beeings)]
 
-    gol = GameOfLife(size, livings, runner=True, ruleset="2555")
+    gol = GameOfLife(size, livings, runner=False, ruleset="2555")
     #gol = GameOfLife(size, livings, run=True, ruleset="5655")
     gol.start()
 
