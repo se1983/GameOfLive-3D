@@ -15,7 +15,7 @@ class GameOfLife(Thread):
         self.g = [[[(x, y, z) in livings for x in xrange(n)] for y in xrange(n)] for z in xrange(n)]
         self.n = n
         self.size = n
-        self.neighbors = self.neighbor_count()
+        self.neighbors = self.count_neighbors()
 
 
     def run(self):
@@ -39,7 +39,7 @@ class GameOfLife(Thread):
         """
         self.g = self.__game(self.g)
 
-    def neighbor_count(self):
+    def count_neighbors(self):
         """
 
         :return: Matrix of the neighbors
@@ -70,31 +70,36 @@ class GameOfLife(Thread):
                         if self.g[i - 1][j][k]:
                             n[i][j][k] += 1
                     # counting also the neighbors
-                    # on the edges
-                    if (not i >= self.size-1) and (not j >= self.size-1) and (not k >= self.size-1):
-                        if self.g[i + 1][j + 1][k + 1]:
+                    # we dont count the cubes on the corners
+                    # but we do on the edges
+
+                    # i static
+                    if (not j >= self.size-1) and (not k >= self.size-1):
+                        if self.g[i][j+1][k+1]:
                             n[i][j][k] += 1
-                    if (not i <= 0) and (not j >= self.size-1) and (not k >= self.size-1):
-                        if self.g[i - 1][j + 1][k + 1]:
+                    if (not j <= 0) and (not k >=self.size-1):
+                        if self.g[i][j-1][k+1]:
                             n[i][j][k] += 1
-                    if (not i >= self.size-1) and (not j <= 0) and (not k >= self.size-1):
-                        if self.g[i + 1][j - 1][k + 1]:
+                    if (not j >= self.size-1) and (not k <= 0):
+                        if self.g[i][j+1][k-1]:
                             n[i][j][k] += 1
-                    if (not i <= 0) and (not j <= 0) and (not k >= self.size-1):
-                        if self.g[i - 1][j - 1][k + 1]:
+                    if (not j <= 0) and (not k <= 0):
+                        if self.g[i][j-1][k-1]:
                             n[i][j][k] += 1
-                    if (not i >= self.size-1) and (not j >= self.size-1) and (not k <= 0):
-                        if self.g[i + 1][j + 1][k - 1]:
+                    # j static
+                    if (not i >= self.size-1) and (not k >= self.size-1):
+                        if self.g[i+1][j][k+1]:
                             n[i][j][k] += 1
-                    if (not i <= 0) and (not j >= self.size-1) and (not k <= 0):
-                        if self.g[i - 1][j + 1][k - 1]:
+                    if (not i <= 0) and (not k >=self.size-1):
+                        if self.g[i-1][j][k+1]:
                             n[i][j][k] += 1
-                    if (not i >= self.size-1) and (not j >= 0) and (not k <= 0):
-                        if self.g[i + 1][j - 1][k - 1]:
+                    if (not i >= self.size-1) and (not k <= 0):
+                        if self.g[i+1][j][k-1]:
                             n[i][j][k] += 1
-                    if (not i <= 0) and (not j <= 0) and (not k <= 0):
-                        if self.g[i - 1][j - 1][k - 1]:
+                    if (not i <= 0) and (not k <= 0):
+                        if self.g[i-1][j][k-1]:
                             n[i][j][k] += 1
+                    # k static
                     if (not i >= self.size-1) and  (not j >= self.size-1):
                         if self.g[i + 1][j + 1][k]:
                             n[i][j][k] += 1
@@ -118,7 +123,7 @@ class GameOfLife(Thread):
         :return: g -- game object
         """
 
-        self.neighbors = self.neighbor_count()
+        self.neighbors = self.count_neighbors()
 
         # Life wxyz is the rule set in which an alive cell will
         # stay alive in the next generation if it has n live neighbors

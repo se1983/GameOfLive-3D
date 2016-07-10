@@ -9,7 +9,7 @@ from copy import deepcopy
 
 # List of values for the alpha_blending
 f = lambda x: sin(x)
-frames = 10.0
+frames = 4.0
 A = [f(n / frames) for n in range(int(pi / 2 * frames))]
 
 class Cube():
@@ -28,7 +28,11 @@ class Cube():
         glTranslatef(*self.__translation(+2.1))
         #self.__draw_wired_cube(self.wire_color)
         if self.status == 'draw' and not neighbors < 0:
-            self.surface_color = colors.heatmap[neighbors][0:4]
+            try:
+                self.surface_color = colors.heatmap[neighbors][0:4]
+            except IndexError:
+                self.surface_color = colors.heatmap[-1][0:4]
+
         if neighbors == -1:
             self.surface_color = colors.draw['surface']
 
@@ -94,6 +98,15 @@ class Cube():
 
         for i, triangle in enumerate(cube['triangles']):
             glNormal3f(*cube['normals'][i])
+
+            #mat_ambient = [0.329412,0.223529,0.027451]
+            #mat_diffuse = [0.780392,0.568627,0.113725]
+            #mat_specular = [0.992157, 0.941176, 0.807843]
+            #glMaterialfv (GL_FRONT,GL_AMBIENT,mat_ambient,0);
+            #glMaterialfv (GL_FRONT,GL_DIFFUSE,mat_diffuse,0);
+            #glMaterialfv (GL_FRONT,GL_SPECULAR,mat_specular,0);
+
+            glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS, 27.89743616)
             for vertex in triangle:
                 glVertex3f(*cube['vertices'][vertex])
         glEnd()
@@ -113,12 +126,14 @@ class CubeMatrix():
         # The size of the playground
         self.size = gol.size * -2.1
 
-    def draw(self, gol, FX_appear=True, FX_disappear=True, heatmap=True):
+    def draw(self, gol, FX_appear=True, FX_disappear=False, heatmap=True):
 
         # saving the state of gol's g
         g = deepcopy(gol.g)
         # translation for centric universe
         glTranslatef(*[self.size * 0.5 + 1 for _ in range(len('xyz'))])
+
+        _n = gol.count_neighbors()
 
         for i, area in enumerate(self.playground):
             for j, row in enumerate(area):
@@ -137,9 +152,10 @@ class CubeMatrix():
                         cell.blend_out()
                     if new and (not old) and FX_appear:
                         cell.blend_in()
+
                     # Show the cell.
                     if heatmap:
-                        cell.draw(gol.neighbors[i][j][k])
+                        cell.draw(_n[i][j][k])
                     else:
                         cell.draw(-1)
         self._g = deepcopy(g)

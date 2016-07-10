@@ -147,6 +147,8 @@ class GameMain():
 
     def toggle_light(self):
         self.light_on = not self.light_on
+    def toggle_heatmap(self):
+        self.heatmap = not self.heatmap
 
     def set_alpha(self, val):
         if self.alpha + val < 0:
@@ -189,11 +191,7 @@ class GameMain():
                 if event.key == K_r:
                     self.gol.toggle_run()
                 if event.key == K_h:
-                    self.heatmap = True
-
-            elif event.type == KEYUP:
-                if event.key == K_h:
-                    self.heatmap = False
+                    self.toggle_heatmap()
 
 
             ## Mousebutton 1 (left) klicked starts the interactive mode

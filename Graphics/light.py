@@ -8,8 +8,9 @@ from Graphics import colors
 
 def init():
     position = [100.5, 100.0, 100.0, 0.2]
+    #glEnable(GL_COLOR_MATERIAL)
+    #glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE)
 
-    #glEnable(glLightModelTwoSSide)
     glLightfv(GL_LIGHT0, GL_POSITION, position)
     glLightfv(GL_LIGHT0, GL_AMBIENT, GLfloat_4(*colors.draw['light_0']['ambi']))
     glLightfv(GL_LIGHT0, GL_DIFFUSE, GLfloat_4(*colors.draw['light_0']['diff']))
