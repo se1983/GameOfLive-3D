@@ -6,14 +6,13 @@ from Graphics import colors, geometrics
 from math import sin, pi, e
 from copy import deepcopy
 
-
 # List of values for the alpha_blending
 f = lambda x: sin(x)
-frames = 4.0
+frames = 8.0
 A = [f(n / frames) for n in range(int(pi / 2 * frames))]
 
-class Cube():
 
+class Cube():
     def __init__(self, position):
         self.cube = geometrics.cube()
         self.position = position
@@ -26,7 +25,7 @@ class Cube():
     def draw(self, neighbors=-1):
 
         glTranslatef(*self.__translation(+2.1))
-        #self.__draw_wired_cube(self.wire_color)
+        # self.__draw_wired_cube(self.wire_color)
         if self.status == 'draw' and not neighbors < 0:
             try:
                 self.surface_color = colors.heatmap[neighbors][0:4]
@@ -66,7 +65,6 @@ class Cube():
             self.status = 'draw'
             self.surface_color = colors.draw['surface']
 
-
     def __translation(self, factor):
         return [(factor * n) for n in self.position]
 
@@ -99,21 +97,18 @@ class Cube():
         for i, triangle in enumerate(cube['triangles']):
             glNormal3f(*cube['normals'][i])
 
-            #mat_ambient = [0.329412,0.223529,0.027451]
-            #mat_diffuse = [0.780392,0.568627,0.113725]
-            #mat_specular = [0.992157, 0.941176, 0.807843]
-            #glMaterialfv (GL_FRONT,GL_AMBIENT,mat_ambient,0);
-            #glMaterialfv (GL_FRONT,GL_DIFFUSE,mat_diffuse,0);
-            #glMaterialfv (GL_FRONT,GL_SPECULAR,mat_specular,0);
 
-            glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS, 27.89743616)
+            #glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, self.surface_color + (1,), 0)
+            #glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, self.surface_color + (1,), 0)
+            #glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, self.surface_color + (1,), 0)
+            #glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50)
+
             for vertex in triangle:
                 glVertex3f(*cube['vertices'][vertex])
         glEnd()
 
 
 class CubeMatrix():
-
     def __init__(self, gol):
 
         # This Expression repressents a 3D-Matrix of Cube-Objects

@@ -29,9 +29,9 @@ class GameOfLife(Thread):
             sleep(1)
             if self.runner:
                 self.tick()
+
     def toggle_run(self):
         self.runner = not self.runner
-
 
     def tick(self):
         """ Next step

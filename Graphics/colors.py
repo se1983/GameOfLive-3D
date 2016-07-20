@@ -15,23 +15,23 @@ dark_green = (0.0, 0.6, 0.0)
 
 
 
-def ipol(col_1, col_2):
+def __interpolate(col_1, col_2):
     return tuple([(col_1[c] + col_2[c]) * 1 / 2.0 for c in range(len('rgb'))])
 
 
 heatmap = [
     blue,
-    ipol(blue, cyan),
+    __interpolate(blue, cyan),
     cyan,
-    ipol(cyan, green),
+    __interpolate(cyan, green),
     green,
-    ipol(green, yellow),
+    __interpolate(green, yellow),
     yellow,
-    ipol(yellow, red),
+    __interpolate(yellow, red),
     red,
-    ipol(red, magenta),
+    __interpolate(red, magenta),
     magenta,
-    ipol(magenta, white),
+    __interpolate(magenta, white),
     white]
 
 draw = {

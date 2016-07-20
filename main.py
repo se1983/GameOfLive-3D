@@ -13,12 +13,11 @@ from random import randint
 # Done Beleuchtung
 # Done Zoom und drehen durch Maus
 # Done Uebergaenge l->d / d->l
-# TODO Steuerung durch config-files
 # Done autorun
 
 
 def main():
-    size = 12
+    size = 16
     beeings = 600
     # no twins allowed, the second dies
     livings = [(randint(0, size-1),

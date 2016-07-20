@@ -50,6 +50,7 @@ class GameMain():
         pygame.display.set_caption("sebsch's 3D LIFE <%s>" % "".join([str(i) for i in self.gol.ruleset]))
         gluPerspective(45, 1, 0.1, 10.0 * self.board_size)
 
+        #glEnable( GL_COLOR_MATERIAL )
         self.__init_position()
         self.__init_light__()
         self.__init_zfilter__()
@@ -180,10 +181,6 @@ class GameMain():
                     self.toggle_light()
                 if event.key == K_f:
                     pygame.display.toggle_fullscreen()
-                if event.key == K_a:
-                    self.set_alpha(val=-0.1)
-                if event.key == K_q:
-                    self.set_alpha(val=+0.1)
                 if event.key == K_s:
                     self.demo_speed += 1
                 if event.key == K_w:
